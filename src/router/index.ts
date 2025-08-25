@@ -6,7 +6,7 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/pages/Layout/index.vue'),
-      redirect: '/note/welcome',
+      redirect: '/note/welcome-note',
       children: [
         {
           path: 'note/:noteId',
@@ -15,7 +15,8 @@ const router = createRouter({
         {
           path: 'settings',
           component: () => import('@/pages/Settings/index.vue')
-        }
+        },
+        { path: 'note', redirect: '/note/welcome-note' }
       ]
     },
     {
