@@ -16,8 +16,11 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
+    "@vueuse/core": "^13.7.0",
     "dayjs": "^1.11.13",
     "element-plus": "^2.11.1",
+    "highlight.js": "^11.11.1",
+    "markdown-it": "^14.1.0",
     "normalize.css": "^8.0.1",
     "pinia": "^3.0.3",
     "sass": "^1.90.0",
@@ -27,6 +30,8 @@
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
+    "@types/highlight.js": "^9.12.4",
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.16.5",
     "@typescript-eslint/eslint-plugin": "^8.40.0",
     "@typescript-eslint/parser": "^8.40.0",

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Close, Expand } from '@element-plus/icons-vue'
 
 // 笔记列表宽度
 const sidebarSize = ref(180)
@@ -33,24 +32,10 @@ const openSidebar = () => {
           <NoteList @close-sidebar="closeSidebar"></NoteList>
         </div>
       </el-splitter-panel>
-      <el-splitter-panel min="30%">
-        <div v-if="sidebarSize < 1" class="toggle-button-wrapper">
-          <el-icon style="cursor: pointer" @click="openSidebar">
-            <Expand />
-          </el-icon>
-        </div>
-        <div class="panel-content">
-          <div :class="{ iconShow: sidebarSize < 1 }">
-            <h3>编辑器</h3>
-          </div>
-          <RouterView />
-        </div>
-      </el-splitter-panel>
-      <el-splitter-panel size="40%" min="30%">
-        <div class="panel-content">
-          <h3>预览区</h3>
-        </div>
-      </el-splitter-panel>
+      <router-view
+        :sidebar-size="sidebarSize"
+        @open-sidebar="openSidebar"
+      ></router-view>
     </el-splitter>
   </div>
 </template>
@@ -61,22 +46,20 @@ const openSidebar = () => {
   width: 100vw;
 
   :deep(.el-splitter-panel) {
-    padding: 10px 10px;
     position: relative;
+    padding: 10px 10px;
+    box-sizing: border-box;
 
-    .panel-content h3 {
-      margin: 0px;
-    }
+    .panel-content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
 
-    .toggle-button-wrapper {
-      position: absolute;
-      left: 0;
-      top: 13px;
-    }
-
-    .iconShow {
-      margin-left: 8px;
-      transition: all 0.7s;
+      h3 {
+        margin: 0;
+        flex-shrink: 0; /* 防止标题被压缩 */
+      }
     }
   }
 }

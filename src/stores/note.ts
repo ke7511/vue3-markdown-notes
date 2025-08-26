@@ -15,7 +15,7 @@ export const useNoteStore = defineStore('note', () => {
       id: 'welcome-note',
       title: '欢迎使用 InkFlow!',
       content:
-        '# 你好，世界！\n\n这是你的第一篇笔记。你可以在这里使用 **Markdown** 语法进行创作。',
+        '# 你好！\n\n这是你的第一篇笔记。你可以在这里使用 **Markdown** 语法进行创作。',
       createdTime: Date.now()
     },
     {
@@ -43,7 +43,7 @@ export const useNoteStore = defineStore('note', () => {
    * @param id 要更新的笔记 ID
    * @param newTitle 新的标题
    */
-  const updateNote = (id: string, newTitle: string) => {
+  const updateNoteTitle = (id: string, newTitle: string) => {
     const note = noteList.value.find((note) => note.id === id)
     if (note) {
       note.title = newTitle
@@ -62,11 +62,19 @@ export const useNoteStore = defineStore('note', () => {
     return newNote.id
   }
 
+  // 更新笔记内容
+  const updateNoteContent = (noteId: string, newContent: string) => {
+    const note = noteList.value.find((note) => note.id === noteId)
+    if (note) {
+      note.content = newContent
+    }
+  }
   return {
     noteList,
     getNoteById,
-    updateNote,
+    updateNoteTitle,
     deleteNote,
-    createNote
+    createNote,
+    updateNoteContent
   }
 })

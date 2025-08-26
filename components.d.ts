@@ -18,6 +18,7 @@ declare module 'vue' {
     ElSplitter: typeof import('element-plus/es')['ElSplitter']
     ElSplitterPanel: typeof import('element-plus/es')['ElSplitterPanel']
     NoteList: typeof import('./src/components/NoteList.vue')['default']
+    NoteRendered: typeof import('./src/components/NoteRendered.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

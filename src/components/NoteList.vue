@@ -23,7 +23,7 @@ const startEditing = async (noteId: string, currentTitle: string) => {
 // 结束编辑
 const endEditing = () => {
   if (editingNoteId.value && editingTitle.value.trim() !== '') {
-    noteStore.updateNote(editingNoteId.value, editingTitle.value)
+    noteStore.updateNoteTitle(editingNoteId.value, editingTitle.value)
   }
   editingNoteId.value = null
 }
