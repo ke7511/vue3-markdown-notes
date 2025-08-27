@@ -27,7 +27,7 @@ const openSidebar = () => {
         min="8%"
         max="20%"
       >
-        <div class="panel-content">
+        <div class="panel-list">
           <!-- NoteList -->
           <NoteList @close-sidebar="closeSidebar"></NoteList>
         </div>
@@ -44,17 +44,24 @@ const openSidebar = () => {
 .app-container {
   height: 100vh;
   width: 100vw;
+  // :deep(.el-splitter-bar) {
+  //   .el-splitter-bar__dragger:after,
+  //   .el-splitter-bar__dragger:before {
+  //     background-color: #f3f3f3;
+  //   }
+  // }
 
   :deep(.el-splitter-panel) {
     position: relative;
-    padding: 10px 10px;
+    // padding: 10px 10px;
     box-sizing: border-box;
 
-    .panel-content {
+    .panel-list {
       width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
+      background-color: #f5f7f6;
 
       h3 {
         margin: 0;

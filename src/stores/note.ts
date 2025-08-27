@@ -1,5 +1,8 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch, toRaw } from 'vue'
 import { defineStore } from 'pinia'
+import { db } from '@/utils/db'
+import { useDebounceFn } from '@vueuse/core'
+import { getUniqueTitle } from '@/utils/uniqueTitle'
 
 // 定义 Note 接口，明确一篇笔记包含哪些数据
 export interface NoteType {
@@ -10,21 +13,15 @@ export interface NoteType {
 }
 
 export const useNoteStore = defineStore('note', () => {
-  const noteList = ref<NoteType[]>([
-    {
-      id: 'welcome-note',
-      title: '欢迎使用 InkFlow!',
-      content:
-        '# 你好！\n\n这是你的第一篇笔记。你可以在这里使用 **Markdown** 语法进行创作。',
-      createdTime: Date.now()
-    },
-    {
-      id: 'markdown-cheatsheet',
-      title: 'Markdown 语法小抄',
-      content: '## 标题\n\n- [ ] 任务列表\n- [x] 已完成任务',
-      createdTime: Date.now() - 100000
-    }
-  ])
+  const noteList = ref<NoteType[]>([])
+
+  // 4. 新增一个 action，用于从数据库加载所有笔记
+  const loadFromDB = async () => {
+    // toArray() 是 Dexie 的方法，用于获取表中的所有记录
+    const notesFromDB = await db.notes.toArray()
+    // 按创建时间降序排序，最新的在最前面
+    noteList.value = notesFromDB.sort((a, b) => b.createdTime - a.createdTime)
+  }
 
   // 根据id来获取笔记
   const getNoteById = computed(() => {
@@ -34,7 +31,8 @@ export const useNoteStore = defineStore('note', () => {
   })
 
   // 删除笔记
-  const deleteNote = (id: string) => {
+  const deleteNote = async (id: string) => {
+    await db.notes.delete(id)
     noteList.value = noteList.value.filter((note) => note.id !== id)
   }
 
@@ -43,27 +41,30 @@ export const useNoteStore = defineStore('note', () => {
    * @param id 要更新的笔记 ID
    * @param newTitle 新的标题
    */
-  const updateNoteTitle = (id: string, newTitle: string) => {
+  const updateNoteTitle = async (id: string, newTitle: string) => {
+    await db.notes.update(id, { title: newTitle })
     const note = noteList.value.find((note) => note.id === id)
     if (note) {
-      note.title = newTitle
+      note.title = getUniqueTitle(newTitle, noteList.value, id)
     }
   }
 
   // 新增笔记
-  const createNote = (): string => {
+  const createNote = async (): Promise<string> => {
     const newNote: NoteType = {
       id: `note-${Date.now()}`,
-      title: '未命名笔记',
-      content: '# 在这里开始书写...',
+      title: getUniqueTitle('未命名笔记', noteList.value),
+      content: '',
       createdTime: Date.now()
     }
+    await db.notes.add(newNote)
     noteList.value.unshift(newNote)
     return newNote.id
   }
 
   // 更新笔记内容
-  const updateNoteContent = (noteId: string, newContent: string) => {
+  const updateNoteContent = async (noteId: string, newContent: string) => {
+    await db.notes.update(noteId, { content: newContent })
     const note = noteList.value.find((note) => note.id === noteId)
     if (note) {
       note.content = newContent
@@ -75,6 +76,7 @@ export const useNoteStore = defineStore('note', () => {
     updateNoteTitle,
     deleteNote,
     createNote,
-    updateNoteContent
+    updateNoteContent,
+    loadFromDB
   }
 })

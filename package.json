@@ -18,6 +18,7 @@
     "@element-plus/icons-vue": "^2.3.2",
     "@vueuse/core": "^13.7.0",
     "dayjs": "^1.11.13",
+    "dexie": "^4.2.0",
     "element-plus": "^2.11.1",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",

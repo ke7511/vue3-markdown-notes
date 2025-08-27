@@ -23,7 +23,7 @@ const startEditing = async (noteId: string, currentTitle: string) => {
 // 结束编辑
 const endEditing = () => {
   if (editingNoteId.value && editingTitle.value.trim() !== '') {
-    noteStore.updateNoteTitle(editingNoteId.value, editingTitle.value)
+    noteStore.updateNoteTitle(editingNoteId.value, editingTitle.value.trim())
   }
   editingNoteId.value = null
 }
@@ -36,11 +36,11 @@ const deleteNote = (id: string) => {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
-  }).then(() => {
-    noteStore.deleteNote(id)
+  }).then(async () => {
+    await noteStore.deleteNote(id)
     if (route.params.noteId === id) {
       if (noteStore.noteList.length > 0) {
-        router.push(`/note/${noteStore.noteList[0].id}`)
+        router.push(`/${noteStore.noteList[0].id}`)
       } else {
         router.push('/')
       }
@@ -59,14 +59,14 @@ const closeSidebar = () => {
   emit('close-sidebar')
 }
 // 新增笔记
-const handleCreateNote = () => {
-  const newNoteId = noteStore.createNote()
-  router.push(`/note/${newNoteId}`)
+const handleCreateNote = async () => {
+  const newNoteId = await noteStore.createNote()
+  router.push(`/${newNoteId}`)
 }
 </script>
 
 <template>
-  <div class="note-list-wrapper">
+  <div>
     <!-- 侧边栏头部 -->
     <div class="sidebar-header">
       <div class="note-create">
@@ -91,61 +91,63 @@ const handleCreateNote = () => {
       </el-button>
     </div>
     <!-- 笔记列表内容 -->
-    <div
-      v-for="note in noteStore.noteList"
-      :key="note.id"
-      class="note-item"
-      :class="{
-        'is-active': note.id === $route.params.noteId
-      }"
-      @click="() => $router.push(`/note/${note.id}`)"
-    >
-      <!-- 标题部分：根据是否在编辑状态，显示输入框或文本 -->
-      <div class="note-up">
-        <el-input
-          v-if="editingNoteId === note.id"
-          :ref="
-            (el: any) => {
-              if (el) editingRef = el
-            }
-          "
-          v-model="editingTitle"
-          size="small"
-          @blur="endEditing"
-          @keyup.enter="endEditing"
-        ></el-input>
-        <div
-          v-else
-          class="note-title"
-          @dblclick.prevent="startEditing(note.id, note.title)"
-        >
-          {{ note.title }}
+    <div class="note-content">
+      <div
+        v-for="note in noteStore.noteList"
+        :key="note.id"
+        class="note-item"
+        :class="{
+          'is-active': note.id === $route.params.noteId
+        }"
+        @click="() => $router.push(`/${note.id}`)"
+      >
+        <!-- 标题部分：根据是否在编辑状态，显示输入框或文本 -->
+        <div class="note-up">
+          <el-input
+            v-if="editingNoteId === note.id"
+            :ref="
+              (el: any) => {
+                if (el) editingRef = el
+              }
+            "
+            v-model="editingTitle"
+            size="small"
+            @blur="endEditing"
+            @keyup.enter="endEditing"
+          ></el-input>
+          <div
+            v-else
+            class="note-title"
+            @dblclick.prevent="startEditing(note.id, note.title)"
+          >
+            {{ note.title }}
+          </div>
+          <el-button
+            class="delete-button"
+            :icon="Edit"
+            text
+            circle
+            size="small"
+            title="编辑笔记标题"
+            @click="startEditing(note.id, note.title)"
+          ></el-button>
         </div>
-        <el-button
-          class="delete-button"
-          :icon="Edit"
-          text
-          circle
-          size="small"
-          title="编辑笔记标题"
-          @click="startEditing(note.id, note.title)"
-        ></el-button>
-      </div>
-      <!-- 日期及删除 -->
-      <div class="note-under">
-        <div class="note-date">
-          {{ new Date(note.createdTime).toLocaleDateString() }}
+        <!-- 日期及删除 -->
+        <div class="note-under">
+          <div class="note-date">
+            {{ new Date(note.createdTime).toLocaleDateString() }}
+          </div>
+          <!-- 删除功能 -->
+          <el-button
+            class="delete-button"
+            :icon="Delete"
+            text
+            circle
+            size="small"
+            title="删除笔记"
+            @click.stop="deleteNote(note.id)"
+          />
         </div>
-        <!-- 删除功能 -->
-        <el-button
-          class="delete-button"
-          :icon="Delete"
-          text
-          circle
-          size="small"
-          title="删除笔记"
-          @click.stop="deleteNote(note.id)"
-        />
       </div>
     </div>
   </div>
@@ -153,74 +155,79 @@ const handleCreateNote = () => {
 
 <style lang="scss" scoped>
 .sidebar-header {
+  padding: 10px;
+  background-color: #f9f9fb;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 
-  .close-btn {
-    background-color: #f5f7fa;
-  }
   .note-create {
     display: flex;
     align-items: center;
   }
 }
+.note-content {
+  padding: 0 10px;
+  .note-item {
+    background-color: #fafafa;
+    display: block;
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+    margin-bottom: 5px;
+    transition: background-color 0.2s; // 添加一个过渡效果
 
-.note-item {
-  background-color: #f5f7fa;
-  display: block;
-  padding: 10px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  text-decoration: none;
-  color: #303133;
-  margin-bottom: 5px;
-  transition: background-color 0.2s; // 添加一个过渡效果
+    &:hover {
+      background-color: #e8f2ff; // 柔和的浅蓝
+      color: #1677ff; // 比较自然的蓝色作为点缀
 
-  &:hover {
-    background-color: #f5f7fa;
-    :deep(.delete-button) {
-      opacity: 1;
+      :deep(.delete-button) {
+        opacity: 1;
+      }
     }
-  }
 
-  // & 代表父选择器 .note-item
-  // .is-active 是 vue-router 自动添加的类
-  &.is-active {
-    background-color: #ecf5ff;
-    color: var(--el-color-primary);
-  }
-
-  .note-up {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .note-title {
-      line-height: 20px;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    // & 代表父选择器 .note-item
+    // .is-active 是 vue-router 自动添加的类
+    &.is-active {
+      background-color: #dceeff; // 激活态更深一点的浅蓝
+      color: #1677ff;
+      font-weight: 600;
     }
-  }
 
-  .note-under {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: -8px;
-
-    .note-date {
-      font-size: 12px;
-      color: #909399;
+    .note-up {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .note-title {
+        line-height: 20px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
-  }
-  .delete-button {
-    flex-shrink: 0;
-    margin-top: 4px;
-    opacity: 0; // 默认隐藏
-    transition: opacity 0.2s;
+
+    .note-under {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: -8px;
+
+      .note-date {
+        font-size: 12px;
+        color: #a0a0a0; // 比之前 #909399 更柔和
+      }
+    }
+    .delete-button {
+      flex-shrink: 0;
+      margin-top: 4px;
+      opacity: 0; // 默认隐藏
+      transition: opacity 0.2s;
+      color: #909399; // 默认按钮更低调
+    }
   }
 }
 </style>

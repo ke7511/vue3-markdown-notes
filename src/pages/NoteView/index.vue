@@ -40,10 +40,12 @@ watch(
       currentNote.value = note
       noteContent.value = note.content
       if (editorRef.value) {
+        editorRef.value.focus()
         editorRef.value.innerText = noteContent.value
       }
     } else {
-      ElMessage.error('找不到您的笔记')
+      currentNote.value = null
+      // ElMessage.error('找不到您的笔记')
     }
   },
   { immediate: true }
@@ -55,9 +57,7 @@ const md = markdownit({
   linkify: true,
   typographer: true,
   highlight: (str, lang): string => {
-    console.log(3)
     if (lang && hljs.getLanguage(lang)) {
-      console.log(1)
       try {
         return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}</code></pre>`
       } catch (__) {}
@@ -84,6 +84,7 @@ watch(noteContent, (newContent) => {
 // 组件加载完毕后，渲染编辑区的内容
 onMounted(() => {
   if (editorRef.value) {
+    editorRef.value.focus()
     editorRef.value.innerText = noteContent.value
   }
 })
@@ -112,7 +113,7 @@ const onPaste = (e: ClipboardEvent) => {
       </el-icon>
     </div>
     <div class="panel-content">
-      <div :class="{ iconShow: sidebarSize < 1 }">
+      <div :class="{ iconShow: sidebarSize < 1 }" class="panel-title">
         <h3>编辑区</h3>
       </div>
       <div v-if="currentNote" class="editor-pane">
@@ -131,7 +132,10 @@ const onPaste = (e: ClipboardEvent) => {
   </el-splitter-panel>
   <el-splitter-panel size="40%" min="30%">
     <div class="panel-content">
-      <h3>预览区</h3>
+      <div class="panel-title">
+        <h3>预览区</h3>
+      </div>
+
       <div class="markdown-body" v-html="renderedMarkdown"></div>
     </div>
   </el-splitter-panel>
@@ -140,7 +144,7 @@ const onPaste = (e: ClipboardEvent) => {
 <style scoped lang="scss">
 .el-splitter-panel {
   position: relative;
-  padding: 10px;
+  // padding: 10px;
   box-sizing: border-box;
   .toggle-button-wrapper {
     position: absolute;
@@ -149,18 +153,24 @@ const onPaste = (e: ClipboardEvent) => {
   }
 
   .panel-content {
-    padding: 0 10px;
+    // padding: 0 10px;
     box-sizing: border-box;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
 
+    .panel-title {
+      padding: 10px 10px;
+      background-color: #f5f7f6;
+    }
     .placeholder {
       color: #909399;
     }
 
     .editor-pane {
+      margin-top: 10px;
+      padding: 0 10px;
       box-sizing: border-box;
       flex: 1;
       .editor-textarea {
@@ -178,7 +188,7 @@ const onPaste = (e: ClipboardEvent) => {
 
     .markdown-body {
       line-height: 1.5;
-      padding: 0 10px;
+      padding: 0 20px;
       flex: 1;
       :deep(h1) {
         border-bottom: 1px solid #eee;

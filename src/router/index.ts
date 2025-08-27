@@ -6,17 +6,16 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/pages/Layout/index.vue'),
-      redirect: '/note/welcome-note',
+      redirect: '/welcome-note',
       children: [
         {
-          path: 'note/:noteId',
+          path: '/:noteId',
           component: () => import('@/pages/NoteView/index.vue')
         },
         {
           path: 'settings',
           component: () => import('@/pages/Settings/index.vue')
-        },
-        { path: 'note', redirect: '/note/welcome-note' }
+        }
       ]
     },
     {
