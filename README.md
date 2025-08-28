@@ -1,6 +1,6 @@
 # Vue3 Markdown 笔记应用
 
-一个基于 **Vue 3** + **Pinia** + **Dexie (IndexedDB)** 的轻量级 Markdown 笔记应用，支持本地存储、实时预览和自动保存功能。  
+一个基于 **Vue 3** + **TypeScript** + **Pinia** + **Dexie (IndexedDB)** 的轻量级 Markdown 笔记应用，支持本地存储、实时预览和自动保存功能。  
 
 应用设计目标是**简单、易用、轻量**，方便快速记录想法、待办事项或学习笔记。
 
@@ -12,7 +12,7 @@
 - ✅ Markdown 编辑器，支持实时预览  
 - ✅ 自动保存，数据存储在浏览器 IndexedDB 中  
 - ✅ 左侧笔记列表，支持折叠和切换  
-- ✅ 支持高亮代码块（通过 `highlight.js`）  
+- ✅ 支持高亮代码块
 
 ---
 
