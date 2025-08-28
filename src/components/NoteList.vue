@@ -192,7 +192,7 @@ const handleCreateNote = async () => {
     // & 代表父选择器 .note-item
     // .is-active 是 vue-router 自动添加的类
     &.is-active {
-      background-color: #dceeff; // 激活态更深一点的浅蓝
+      background-color: #dceeff;
       color: #1677ff;
       font-weight: 600;
     }

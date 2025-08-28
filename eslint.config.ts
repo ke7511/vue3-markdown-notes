@@ -30,7 +30,6 @@ export default tseslint.config(
       }
     }
   },
-
   ...tseslint.configs.recommended,
   ...pluginVue.configs['flat/recommended'],
 

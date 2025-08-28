@@ -44,12 +44,6 @@ const openSidebar = () => {
 .app-container {
   height: 100vh;
   width: 100vw;
-  // :deep(.el-splitter-bar) {
-  //   .el-splitter-bar__dragger:after,
-  //   .el-splitter-bar__dragger:before {
-  //     background-color: #f3f3f3;
-  //   }
-  // }
 
   :deep(.el-splitter-panel) {
     position: relative;

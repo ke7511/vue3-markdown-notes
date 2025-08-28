@@ -162,7 +162,6 @@ const onPaste = (e: ClipboardEvent) => {
   }
 
   .panel-content {
-    // padding: 0 10px;
     box-sizing: border-box;
     width: 100%;
     height: 100%;
