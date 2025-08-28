@@ -3,6 +3,7 @@ import { useNoteStore, type NoteType } from '@/stores/note'
 import { useRoute } from 'vue-router'
 import { computed, ref, watch, onMounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
+import DOMPurify from 'dompurify'
 import markdownit from 'markdown-it'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
@@ -76,7 +77,7 @@ const md = markdownit({
 
 // 创建一个计算属性，用于实时渲染预览区的 HTML
 const renderedMarkdown = computed(() => {
-  return md.render(noteContent.value)
+  return DOMPurify.sanitize(md.render(noteContent.value))
 })
 
 //监听 noteContent 的变化，并更新笔记内容
@@ -143,7 +144,7 @@ const onPaste = (e: ClipboardEvent) => {
       <div class="panel-title">
         <h3>预览区</h3>
       </div>
-
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="markdown-body" v-html="renderedMarkdown"></div>
     </div>
   </el-splitter-panel>
