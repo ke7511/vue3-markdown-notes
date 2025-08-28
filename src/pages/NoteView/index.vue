@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useNoteStore, type NoteType } from '@/stores/note'
 import { useRoute } from 'vue-router'
-import { computed, ref, watch, onMounted } from 'vue'
+import { computed, ref, watch, onMounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import markdownit from 'markdown-it'
 import hljs from 'highlight.js'
@@ -33,15 +33,23 @@ const editorRef = ref<HTMLDivElement | null>(null)
 const route = useRoute()
 watch(
   () => route.params.noteId,
-  (newId) => {
+  async (newId) => {
     const id = Array.isArray(newId) ? newId[0] : newId
     const note = noteStore.getNoteById(id)
     if (note) {
       currentNote.value = note
       noteContent.value = note.content
+      await nextTick()
       if (editorRef.value) {
-        editorRef.value.focus()
         editorRef.value.innerText = noteContent.value
+        editorRef.value.focus()
+        // 将光标移动到最后
+        const range = document.createRange()
+        range.selectNodeContents(editorRef.value)
+        range.collapse(false) // false 表示折叠到末尾
+        const selection = window.getSelection()
+        selection?.removeAllRanges()
+        selection?.addRange(range)
       }
     } else {
       currentNote.value = null
@@ -126,7 +134,7 @@ const onPaste = (e: ClipboardEvent) => {
         />
       </div>
       <div v-else class="placeholder">
-        <p>请在左侧选择一篇笔记，或新建一篇笔记。</p>
+        <div>请在左侧选择一篇笔记，或新建一篇笔记。</div>
       </div>
     </div>
   </el-splitter-panel>
@@ -165,6 +173,7 @@ const onPaste = (e: ClipboardEvent) => {
       background-color: #f5f7f6;
     }
     .placeholder {
+      padding: 20px;
       color: #909399;
     }
 
