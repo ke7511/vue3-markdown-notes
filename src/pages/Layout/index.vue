@@ -29,7 +29,10 @@ const openSidebar = () => {
       >
         <div class="panel-list">
           <!-- NoteList -->
-          <NoteList @close-sidebar="closeSidebar"></NoteList>
+          <NoteList
+            :sidebar-size="sidebarSize"
+            @close-sidebar="closeSidebar"
+          ></NoteList>
         </div>
       </el-splitter-panel>
       <router-view

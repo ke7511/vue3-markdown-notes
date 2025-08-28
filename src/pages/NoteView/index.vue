@@ -54,10 +54,22 @@ watch(
       }
     } else {
       currentNote.value = null
+      noteContent.value = ''
       // ElMessage.error('找不到您的笔记')
     }
   },
   { immediate: true }
+)
+
+// 监听currentNote 是否还存在于 noteStore
+watch(
+  () => noteStore.noteList,
+  () => {
+    if (currentNote.value && !noteStore.noteList.includes(currentNote.value)) {
+      currentNote.value = null
+      noteContent.value = ''
+    }
+  }
 )
 
 // 初始化markdown-it

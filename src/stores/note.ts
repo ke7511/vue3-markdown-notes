@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { db } from '@/utils/db'
 import { useDebounceFn } from '@vueuse/core'
 import { getUniqueTitle } from '@/utils/uniqueTitle'
+import { useRoute, useRouter } from 'vue-router'
 
 // 定义 Note 接口，明确一篇笔记包含哪些数据
 export interface NoteType {

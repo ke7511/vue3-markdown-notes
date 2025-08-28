@@ -7,6 +7,14 @@ import { useRoute, useRouter } from 'vue-router'
 
 const noteStore = useNoteStore()
 
+// 笔记列表宽度
+const props = defineProps({
+  sidebarSize: {
+    type: Number,
+    default: 0
+  }
+})
+
 // 编辑笔记
 const editingNoteId = ref<string | null>()
 const editingTitle = ref('')
@@ -73,6 +81,7 @@ const handleCreateNote = async () => {
         <h3>笔记列表</h3>
         <!-- 2. 添加我们的新建按钮 -->
         <el-button
+          v-if="sidebarSize > 140"
           :icon="Plus"
           text
           circle
@@ -81,7 +90,7 @@ const handleCreateNote = async () => {
         />
       </div>
       <el-button
-        class="close-btn"
+        v-if="sidebarSize > 120"
         :icon="Close"
         text
         circle
@@ -155,6 +164,7 @@ const handleCreateNote = async () => {
 
 <style lang="scss" scoped>
 .sidebar-header {
+  height: 32px;
   padding: 10px;
   background-color: #f9f9fb;
   display: flex;
