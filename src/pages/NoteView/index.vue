@@ -211,14 +211,14 @@ const onPaste = (e: ClipboardEvent) => {
       line-height: 1.5;
       padding: 0 20px;
       flex: 1;
+      :deep(img) {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
       :deep(h1) {
         border-bottom: 1px solid #eee;
         padding-bottom: 0.3em;
-      }
-      :deep(pre) {
-        white-space: pre-wrap;
-        word-break: break-word;
-        overflow-x: hidden; /* 禁用横向滚动 */
       }
       :deep(code) {
         font-weight: 600;
