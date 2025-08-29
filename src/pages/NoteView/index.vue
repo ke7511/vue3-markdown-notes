@@ -9,6 +9,7 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 import { useDebounceFn } from '@vueuse/core'
 import { Expand } from '@element-plus/icons-vue'
+import { focusEnd } from '@/utils/focusEnd'
 
 // 接收传来的sidebarSize
 const props = defineProps({
@@ -43,14 +44,8 @@ watch(
       await nextTick()
       if (editorRef.value) {
         editorRef.value.innerText = noteContent.value
-        editorRef.value.focus()
-        // 将光标移动到最后
-        const range = document.createRange()
-        range.selectNodeContents(editorRef.value)
-        range.collapse(false) // false 表示折叠到末尾
-        const selection = window.getSelection()
-        selection?.removeAllRanges()
-        selection?.addRange(range)
+        // 聚焦，将光标移动到最后
+        focusEnd(editorRef.value)
       }
     } else {
       currentNote.value = null
@@ -105,7 +100,7 @@ watch(noteContent, (newContent) => {
 // 组件加载完毕后，渲染编辑区的内容
 onMounted(() => {
   if (editorRef.value) {
-    editorRef.value.focus()
+    // editorRef.value.focus()
     editorRef.value.innerText = noteContent.value
   }
 })
