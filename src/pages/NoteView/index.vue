@@ -2,17 +2,16 @@
 import { useNoteStore, type NoteType } from '@/stores/note'
 import { useRoute } from 'vue-router'
 import { computed, ref, watch, onMounted, nextTick } from 'vue'
-import { ElMessage } from 'element-plus'
+// import { ElMessage } from 'element-plus'
 import DOMPurify from 'dompurify'
 import markdownit from 'markdown-it'
-import hljs from 'highlight.js'
+import hljs from 'highlight.js/lib/common'
 import 'highlight.js/styles/github.css'
 import { useDebounceFn } from '@vueuse/core'
 import { Expand } from '@element-plus/icons-vue'
-import { focusEnd } from '@/utils/focusEnd'
 
 // 接收传来的sidebarSize
-const props = defineProps({
+defineProps({
   sidebarSize: {
     type: Number,
     default: 0
@@ -28,7 +27,7 @@ const openSidebar = () => {
 const noteStore = useNoteStore()
 const currentNote = ref<NoteType | null>()
 const noteContent = ref('')
-const editorRef = ref<HTMLDivElement | null>(null)
+const editorRef = ref<HTMLTextAreaElement | null>(null)
 
 // 接收路由传来的noteId
 // watch会在 noteId 变化时自动重新运行
@@ -43,9 +42,8 @@ watch(
       noteContent.value = note.content
       await nextTick()
       if (editorRef.value) {
-        editorRef.value.innerText = noteContent.value
-        // 聚焦，将光标移动到最后
-        focusEnd(editorRef.value)
+        // 聚焦
+        editorRef.value.focus()
       }
     } else {
       currentNote.value = null
@@ -68,20 +66,22 @@ watch(
 )
 
 // 初始化markdown-it
-const md = markdownit({
-  html: true,
-  linkify: true,
-  typographer: true,
-  highlight: (str, lang): string => {
+const md = new markdownit({
+  highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
-      try {
-        return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}</code></pre>`
-      } catch (__) {}
+      // 如果用户指定了语言，并且 highlight.js 支持，就用指定语言
+      return (
+        '<pre class="hljs"><code>' +
+        hljs.highlight(str, { language: lang }).value +
+        '</code></pre>'
+      )
     }
-    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`
+
+    // 否则走自动检测
+    const autoHighlight = hljs.highlightAuto(str)
+    return '<pre class="hljs"><code>' + autoHighlight.value + '</code></pre>'
   }
 })
-
 // 创建一个计算属性，用于实时渲染预览区的 HTML
 const renderedMarkdown = computed(() => {
   return DOMPurify.sanitize(md.render(noteContent.value))
@@ -98,27 +98,20 @@ watch(noteContent, (newContent) => {
 })
 
 // 组件加载完毕后，渲染编辑区的内容
-onMounted(() => {
-  if (editorRef.value) {
-    // editorRef.value.focus()
-    editorRef.value.innerText = noteContent.value
-  }
-})
-const onInput = (e: Event) => {
-  const target = e.target as HTMLDivElement | null
-  if (target) {
-    noteContent.value = target.innerText || ''
-  }
-}
+// onMounted(() => {
+//   if (editorRef.value) {
+//     // editorRef.value.focus()
+//     editorRef.value.innerText = noteContent.value
+//   }
+// })
 
-// 粘贴为纯文本
-const onPaste = (e: ClipboardEvent) => {
-  e.preventDefault()
-  const text = e.clipboardData?.getData('text/plain')
-  if (text) {
-    document.execCommand('insertText', false, text)
-  }
-}
+// const onInput = (e: Event) => {
+//   const target = e.target as HTMLDivElement | null
+//   console.log(e.target)
+//   if (target) {
+//     noteContent.value = target.innerText || ''
+//   }
+// }
 </script>
 
 <template>
@@ -133,12 +126,11 @@ const onPaste = (e: ClipboardEvent) => {
         <h3>编辑区</h3>
       </div>
       <div v-if="currentNote" class="editor-pane">
-        <div
+        <textarea
           ref="editorRef"
+          v-model="noteContent"
           class="editor-textarea"
-          contenteditable="true"
-          @input="onInput"
-          @paste="onPaste"
+          placeholder="请输入内容..."
         />
       </div>
       <div v-else class="placeholder">
@@ -176,6 +168,7 @@ const onPaste = (e: ClipboardEvent) => {
     flex-direction: column;
 
     .panel-title {
+      box-sizing: border-box;
       padding: 10px 10px;
       background-color: #f5f7f6;
     }
@@ -185,18 +178,22 @@ const onPaste = (e: ClipboardEvent) => {
     }
 
     .editor-pane {
-      margin-top: 10px;
-      padding: 0 10px;
       box-sizing: border-box;
       flex: 1;
       .editor-textarea {
+        resize: none;
+        display: block;
+        // margin: 0;
+        box-sizing: border-box;
+        // background-color: orange;
+        width: 100% !important;
+        height: 100% !important;
         padding: 10px;
         overflow-y: auto; /* 开启滚动 */
         border: none;
         outline: none;
         font-size: 16px;
         line-height: 1.5;
-        font-family: 'Helvetica Neue', 'Arial', sans-serif;
         white-space: pre-wrap; /* 保留换行 */
         word-break: break-word;
       }
@@ -211,12 +208,17 @@ const onPaste = (e: ClipboardEvent) => {
         height: auto;
         display: block;
       }
+      :deep(pre) {
+        white-space: pre-wrap; /* 保留换行，同时允许长行换行 */
+        word-wrap: break-word; /* 长单词换行 */
+        overflow-x: auto; /* 超出时依然可横向滚动 */
+      }
       :deep(h1) {
         border-bottom: 1px solid #eee;
         padding-bottom: 0.3em;
       }
       :deep(code) {
-        font-weight: 600;
+        font-family: 'Consolas';
       }
     }
     .iconShow {

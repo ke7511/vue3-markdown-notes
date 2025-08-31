@@ -8,7 +8,7 @@ import { useRoute, useRouter } from 'vue-router'
 const noteStore = useNoteStore()
 
 // 笔记列表宽度
-const props = defineProps({
+defineProps({
   sidebarSize: {
     type: Number,
     default: 0
