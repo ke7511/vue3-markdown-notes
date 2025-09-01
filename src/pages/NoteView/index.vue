@@ -9,6 +9,7 @@ import hljs from 'highlight.js/lib/common'
 import 'highlight.js/styles/github.css'
 import { useDebounceFn } from '@vueuse/core'
 import { Expand } from '@element-plus/icons-vue'
+import type { InputInstance } from 'element-plus'
 
 // 接收传来的sidebarSize
 defineProps({
@@ -27,7 +28,38 @@ const openSidebar = () => {
 const noteStore = useNoteStore()
 const currentNote = ref<NoteType | null>()
 const noteContent = ref('')
-const editorRef = ref<HTMLTextAreaElement | null>(null)
+const editorRef = ref<InputInstance | null>(null)
+
+// 封装一个可复用的函数来加载笔记和调整高度
+const loadNoteAndResize = async (noteId: string) => {
+  const note = noteStore.getNoteById(noteId)
+  if (note) {
+    currentNote.value = note
+    noteContent.value = note.content
+    await nextTick()
+    if (editorRef.value) {
+      editorRef.value.focus()
+      // 【关键】使用 setTimeout 将高度调整推迟到下一个事件循环
+      // 这可以确保浏览器已完成所有初始化的渲染和布局计算
+      setTimeout(() => {
+        editorRef.value?.resizeTextarea()
+      }, 0)
+    }
+  } else {
+    currentNote.value = null
+    noteContent.value = ''
+  }
+}
+
+// 使用 onMounted 处理首次加载
+onMounted(() => {
+  const id = Array.isArray(route.params.noteId)
+    ? route.params.noteId[0]
+    : route.params.noteId
+  if (id) {
+    loadNoteAndResize(id)
+  }
+})
 
 // 接收路由传来的noteId
 // watch会在 noteId 变化时自动重新运行
@@ -35,23 +67,13 @@ const route = useRoute()
 watch(
   () => route.params.noteId,
   async (newId) => {
-    const id = Array.isArray(newId) ? newId[0] : newId
-    const note = noteStore.getNoteById(id)
-    if (note) {
-      currentNote.value = note
-      noteContent.value = note.content
-      await nextTick()
-      if (editorRef.value) {
-        // 聚焦
-        editorRef.value.focus()
-      }
-    } else {
-      currentNote.value = null
-      noteContent.value = ''
-      // ElMessage.error('找不到您的笔记')
+    if (newId) {
+      const id = Array.isArray(route.params.noteId)
+        ? route.params.noteId[0]
+        : route.params.noteId
+      loadNoteAndResize(id)
     }
-  },
-  { immediate: true }
+  }
 )
 
 // 监听currentNote 是否还存在于 noteStore
@@ -93,25 +115,12 @@ const saveNoteContent = useDebounceFn((newContent: string) => {
     noteStore.updateNoteContent(currentNote.value.id, newContent)
   }
 }, 500)
+
+// 自动调整高度函数
+
 watch(noteContent, (newContent) => {
   saveNoteContent(newContent)
 })
-
-// 组件加载完毕后，渲染编辑区的内容
-// onMounted(() => {
-//   if (editorRef.value) {
-//     // editorRef.value.focus()
-//     editorRef.value.innerText = noteContent.value
-//   }
-// })
-
-// const onInput = (e: Event) => {
-//   const target = e.target as HTMLDivElement | null
-//   console.log(e.target)
-//   if (target) {
-//     noteContent.value = target.innerText || ''
-//   }
-// }
 </script>
 
 <template>
@@ -122,13 +131,15 @@ watch(noteContent, (newContent) => {
       </el-icon>
     </div>
     <div class="panel-content">
-      <div :class="{ iconShow: sidebarSize < 1 }" class="panel-title">
-        <h3>编辑区</h3>
-      </div>
       <div v-if="currentNote" class="editor-pane">
-        <textarea
+        <div class="panel-title">
+          <h3>编辑区</h3>
+        </div>
+        <el-input
           ref="editorRef"
           v-model="noteContent"
+          type="textarea"
+          autosize
           class="editor-textarea"
           placeholder="请输入内容..."
         />
@@ -161,47 +172,57 @@ watch(noteContent, (newContent) => {
   }
 
   .panel-content {
+    z-index: 1;
     box-sizing: border-box;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-
-    .panel-title {
-      box-sizing: border-box;
-      padding: 10px 10px;
-      background-color: #f5f7f6;
+    .panel-fixed {
+      position: fixed;
+      width: 100%;
     }
+
     .placeholder {
       padding: 20px;
       color: #909399;
     }
+    .panel-title {
+      box-sizing: border-box;
+      padding: 10px;
+      background-color: #f5f7f6;
+    }
 
     .editor-pane {
+      overflow-y: auto;
       box-sizing: border-box;
       flex: 1;
-      .editor-textarea {
+
+      // 滚动条样式
+      scrollbar-width: thin;
+      scrollbar-color: #a8a8a8 #fff;
+
+      :deep(.editor-textarea .el-textarea__inner) {
+        color: #000;
+        outline: none;
         resize: none;
-        display: block;
-        // margin: 0;
         box-sizing: border-box;
-        // background-color: orange;
-        width: 100% !important;
-        height: 100% !important;
-        padding: 10px;
-        overflow-y: auto; /* 开启滚动 */
+        box-shadow: none;
+        width: 100%;
+        padding: 20px 20px 0;
+        // overflow-y: auto;
         border: none;
         outline: none;
-        font-size: 16px;
-        line-height: 1.5;
         white-space: pre-wrap; /* 保留换行 */
         word-break: break-word;
+        // overflow-y: hidden;
+        font: 16px/1.5 'inherit';
       }
     }
 
     .markdown-body {
       line-height: 1.5;
-      padding: 0 20px;
+      padding: 0 20px 0;
       flex: 1;
       :deep(img) {
         max-width: 100%;

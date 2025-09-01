@@ -1,0 +1,14 @@
+* {
+  box-sizing: border-box;
+}
+// 你告诉浏览器，你要自定义滚动条，宽度为 8px
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+// 【必须】你必须告诉浏览器滑块长什么样子，否则它就是透明的
+::-webkit-scrollbar-thumb {
+  background: grey;
+  border-radius: 8px; // 或者任何你喜欢的颜色，例如 #c1c1c1
+}
