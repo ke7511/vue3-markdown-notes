@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { useNoteStore, type NoteType } from '@/stores/note'
 import { useRoute } from 'vue-router'
-import { computed, ref, watch, onMounted, nextTick } from 'vue'
+import { computed, ref, watch, onMounted, nextTick, onUnmounted } from 'vue'
 // import { ElMessage } from 'element-plus'
 import DOMPurify from 'dompurify'
 import markdownit from 'markdown-it'
 import hljs from 'highlight.js/lib/common'
 import 'highlight.js/styles/github.css'
-import { useDebounceFn } from '@vueuse/core'
-import { Expand } from '@element-plus/icons-vue'
+import { useDebounceFn, useResizeObserver } from '@vueuse/core'
+import { ArrowRight, Expand } from '@element-plus/icons-vue'
 import type { InputInstance } from 'element-plus'
 
 // 接收传来的sidebarSize
-defineProps({
+const props = defineProps({
   sidebarSize: {
     type: Number,
     default: 0
@@ -28,7 +28,7 @@ const openSidebar = () => {
 const noteStore = useNoteStore()
 const currentNote = ref<NoteType | null>()
 const noteContent = ref('')
-const editorRef = ref<InputInstance | null>(null)
+const textareaRef = ref<InputInstance | null>(null)
 
 // 封装一个可复用的函数来加载笔记和调整高度
 const loadNoteAndResize = async (noteId: string) => {
@@ -37,12 +37,12 @@ const loadNoteAndResize = async (noteId: string) => {
     currentNote.value = note
     noteContent.value = note.content
     await nextTick()
-    if (editorRef.value) {
-      editorRef.value.focus()
+    if (textareaRef.value) {
+      textareaRef.value.focus()
       // 【关键】使用 setTimeout 将高度调整推迟到下一个事件循环
       // 这可以确保浏览器已完成所有初始化的渲染和布局计算
       setTimeout(() => {
-        editorRef.value?.resizeTextarea()
+        textareaRef.value?.resizeTextarea()
       }, 0)
     }
   } else {
@@ -115,28 +115,44 @@ const saveNoteContent = useDebounceFn((newContent: string) => {
     noteStore.updateNoteContent(currentNote.value.id, newContent)
   }
 }, 500)
-
-// 自动调整高度函数
-
 watch(noteContent, (newContent) => {
   saveNoteContent(newContent)
 })
+
+// 当编辑区容器宽度变化时，重新计算textarea高度
+const editorRef = ref<HTMLElement | null>(null)
+const remeasureTextarea = useDebounceFn(() => {
+  nextTick(() => textareaRef.value?.resizeTextarea())
+}, 50)
+useResizeObserver(editorRef, () => {
+  remeasureTextarea()
+})
+watch(
+  () => props.sidebarSize,
+  () => remeasureTextarea()
+)
+// onMounted(() => {
+//   window.addEventListener('resize', remeasureTextarea)
+// })
+// onUnmounted(() => {
+//   window.removeEventListener('resize', remeasureTextarea)
+// })
 </script>
 
 <template>
   <el-splitter-panel min="30%">
     <div v-if="sidebarSize < 1" class="toggle-button-wrapper">
-      <el-icon style="cursor: pointer" @click="openSidebar">
-        <Expand />
+      <el-icon @click="openSidebar">
+        <ArrowRight />
       </el-icon>
     </div>
     <div class="panel-content">
-      <div v-if="currentNote" class="editor-pane">
-        <div class="panel-title">
+      <div v-if="currentNote" ref="editorRef" class="editor-pane">
+        <div class="panel-title" :class="{ 'title-active': sidebarSize < 1 }">
           <h3>编辑区</h3>
         </div>
         <el-input
-          ref="editorRef"
+          ref="textareaRef"
           v-model="noteContent"
           type="textarea"
           autosize
@@ -161,15 +177,16 @@ watch(noteContent, (newContent) => {
 </template>
 
 <style scoped lang="scss">
+:global(.toggle-button-wrapper) {
+  cursor: pointer;
+  position: fixed;
+  left: 0;
+  top: 18px;
+  z-index: 20;
+}
 .el-splitter-panel {
-  position: relative;
-  // padding: 10px;
+  // position: relative;
   box-sizing: border-box;
-  .toggle-button-wrapper {
-    position: absolute;
-    left: 0;
-    top: 18px;
-  }
 
   .panel-content {
     z-index: 1;
@@ -178,10 +195,6 @@ watch(noteContent, (newContent) => {
     height: 100%;
     display: flex;
     flex-direction: column;
-    .panel-fixed {
-      position: fixed;
-      width: 100%;
-    }
 
     .placeholder {
       padding: 20px;
@@ -191,6 +204,11 @@ watch(noteContent, (newContent) => {
       box-sizing: border-box;
       padding: 10px;
       background-color: #f5f7f6;
+    }
+
+    .title-active {
+      padding-left: 20px;
+      transition: all 0.5s;
     }
 
     .editor-pane {
@@ -206,16 +224,15 @@ watch(noteContent, (newContent) => {
         color: #000;
         outline: none;
         resize: none;
-        box-sizing: border-box;
+        // box-sizing: border-box;
         box-shadow: none;
         width: 100%;
         padding: 20px 20px 0;
-        // overflow-y: auto;
         border: none;
         outline: none;
         white-space: pre-wrap; /* 保留换行 */
         word-break: break-word;
-        // overflow-y: hidden;
+        overflow-y: hidden;
         font: 16px/1.5 'inherit';
       }
     }

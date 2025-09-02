@@ -165,7 +165,7 @@ const handleCreateNote = async () => {
 <style lang="scss" scoped>
 .sidebar-header {
   height: 32px;
-  padding: 10px;
+  padding: 10px 10px;
   background-color: #f9f9fb;
   display: flex;
   justify-content: space-between;
