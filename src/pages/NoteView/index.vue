@@ -141,10 +141,13 @@ watch(
 
 <template>
   <el-splitter-panel min="30%">
-    <div v-if="sidebarSize < 1" class="toggle-button-wrapper">
-      <el-icon @click="openSidebar">
-        <ArrowRight />
-      </el-icon>
+    <div class="toggle-button-wrapper">
+      <el-button
+        :class="{ 'icon-show': sidebarSize < 1 }"
+        :icon="ArrowRight"
+        title="打开笔记列表 "
+        @click="openSidebar"
+      />
     </div>
     <div class="panel-content">
       <div v-if="currentNote" ref="editorRef" class="editor-pane">
@@ -177,16 +180,23 @@ watch(
 </template>
 
 <style scoped lang="scss">
-:global(.toggle-button-wrapper) {
-  cursor: pointer;
-  position: fixed;
-  left: 0;
-  top: 18px;
-  z-index: 20;
-}
 .el-splitter-panel {
-  // position: relative;
   box-sizing: border-box;
+  .toggle-button-wrapper {
+    :deep(.el-button) {
+      position: fixed;
+      left: -30px;
+      top: 10px;
+      z-index: 20;
+      width: 20px;
+      background: transparent;
+      border: none;
+    }
+    .icon-show {
+      left: -10px;
+      transition: all 0.5s;
+    }
+  }
 
   .panel-content {
     z-index: 1;
