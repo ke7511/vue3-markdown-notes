@@ -142,12 +142,9 @@ const editorSize = ref(Number(localStorage.getItem('editor-size')) || 550)
 onMounted(() => {
   emits('editor-size', editorSize.value)
 })
-watch(
-  editorSize,
-  useDebounceFn((val) => {
-    emits('editor-size', val)
-  }, 50)
-)
+watch(editorSize, (val) => {
+  emits('editor-size', val)
+})
 </script>
 
 <template>

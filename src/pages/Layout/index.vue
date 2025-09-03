@@ -26,11 +26,12 @@ watch(
     } else {
       localStorage.setItem('sidebar-size', '0')
     }
-  }, 50)
+  }, 500)
 )
 
 const editorSize = ref<number>(550)
 const handleResizeEnd = () => {
+  console.log(editorSize.value + '')
   localStorage.setItem('editor-size', editorSize.value + '')
 }
 </script>
@@ -55,7 +56,7 @@ const handleResizeEnd = () => {
       <router-view
         :sidebar-size="sidebarSize"
         @open-sidebar="openSidebar"
-        @editor-size="editorSize = $event"
+        @editor-size="(val: number) => (editorSize = val)"
       ></router-view>
     </el-splitter>
   </div>
