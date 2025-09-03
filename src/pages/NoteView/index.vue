@@ -20,7 +20,7 @@ const props = defineProps({
 })
 
 // 打开笔记列表
-const emits = defineEmits(['open-sidebar'])
+const emits = defineEmits(['open-sidebar', 'editor-size'])
 const openSidebar = () => {
   emits('open-sidebar')
 }
@@ -137,10 +137,21 @@ watch(
 // onUnmounted(() => {
 //   window.removeEventListener('resize', remeasureTextarea)
 // })
+
+const editorSize = ref(Number(localStorage.getItem('editor-size')) || 550)
+onMounted(() => {
+  emits('editor-size', editorSize.value)
+})
+watch(
+  editorSize,
+  useDebounceFn((val) => {
+    emits('editor-size', val)
+  }, 50)
+)
 </script>
 
 <template>
-  <el-splitter-panel min="30%">
+  <el-splitter-panel v-model:size="editorSize" min="30%">
     <div class="toggle-button-wrapper">
       <el-button
         :class="{ 'icon-show': sidebarSize < 1 }"
@@ -168,7 +179,7 @@ watch(
       </div>
     </div>
   </el-splitter-panel>
-  <el-splitter-panel size="40%" min="30%">
+  <el-splitter-panel min="30%">
     <div class="panel-content">
       <div class="panel-title">
         <h3>预览区</h3>

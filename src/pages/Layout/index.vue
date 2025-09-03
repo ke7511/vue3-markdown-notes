@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
+import { ref, watch } from 'vue'
 
 // 笔记列表宽度
-const sidebarSize = ref(180)
+const sidebarSize = ref(Number(localStorage.getItem('sidebar-size')) ?? 180)
 // 关闭笔记列表前的宽度，使笔记列表在打开时保持上次关闭时的宽度
-let lastSidebarSize = 25
+let lastSidebarSize = Number(localStorage.getItem('lastSidebar-size')) || 180
 
 // 点击关闭笔记列表
 const closeSidebar = () => {
@@ -16,11 +17,27 @@ const closeSidebar = () => {
 const openSidebar = () => {
   sidebarSize.value = lastSidebarSize
 }
+watch(
+  sidebarSize,
+  useDebounceFn((val) => {
+    localStorage.setItem('sidebar-size', val + '')
+    if (val > 0) {
+      localStorage.setItem('lastSidebar-size', val + '')
+    } else {
+      localStorage.setItem('sidebar-size', '0')
+    }
+  }, 50)
+)
+
+const editorSize = ref<number>(550)
+const handleResizeEnd = () => {
+  localStorage.setItem('editor-size', editorSize.value + '')
+}
 </script>
 
 <template>
   <div class="app-container">
-    <el-splitter>
+    <el-splitter @resize-end="handleResizeEnd">
       <el-splitter-panel
         v-if="sidebarSize > 0"
         v-model:size="sidebarSize"
@@ -38,6 +55,7 @@ const openSidebar = () => {
       <router-view
         :sidebar-size="sidebarSize"
         @open-sidebar="openSidebar"
+        @editor-size="editorSize = $event"
       ></router-view>
     </el-splitter>
   </div>
