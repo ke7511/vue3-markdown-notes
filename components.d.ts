@@ -13,6 +13,7 @@ declare module 'vue' {
     ElInput: typeof import('element-plus/es')['ElInput']
     ElSplitter: typeof import('element-plus/es')['ElSplitter']
     ElSplitterPanel: typeof import('element-plus/es')['ElSplitterPanel']
+    ElTe: typeof import('element-plus/es')['ElTe']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     NoteList: typeof import('./src/components/NoteList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

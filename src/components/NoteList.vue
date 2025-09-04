@@ -74,89 +74,87 @@ const handleCreateNote = async () => {
 </script>
 
 <template>
-  <div>
-    <!-- 侧边栏头部 -->
-    <div class="sidebar-header">
-      <div class="note-create">
-        <h3>笔记列表</h3>
-        <!-- 2. 添加我们的新建按钮 -->
-        <el-button
-          v-if="sidebarSize > 140"
-          :icon="Plus"
-          text
-          circle
-          title="新建笔记"
-          @click="handleCreateNote"
-        />
-      </div>
+  <!-- 侧边栏头部 -->
+  <div class="sidebar-header">
+    <div class="note-create">
+      <h3>笔记列表</h3>
+      <!-- 2. 添加我们的新建按钮 -->
       <el-button
-        v-if="sidebarSize > 120"
-        :icon="Close"
+        v-if="sidebarSize > 140"
+        :icon="Plus"
         text
         circle
-        title="关闭笔迹列表"
-        @click="closeSidebar"
-      >
-      </el-button>
+        title="新建笔记"
+        @click="handleCreateNote"
+      />
     </div>
-    <!-- 笔记列表内容 -->
-    <div class="note-content">
-      <div
-        v-for="note in noteStore.noteList"
-        :key="note.id"
-        class="note-item"
-        :class="{
-          'is-active': note.id === $route.params.noteId
-        }"
-        @click="() => $router.push(`/${note.id}`)"
-      >
-        <!-- 标题部分：根据是否在编辑状态，显示输入框或文本 -->
-        <div class="note-up">
-          <el-input
-            v-if="editingNoteId === note.id"
-            :ref="
-              (el: any) => {
-                if (el) editingRef = el
-              }
-            "
-            v-model="editingTitle"
-            size="small"
-            @blur="endEditing"
-            @keyup.enter="endEditing"
-          ></el-input>
-          <div
-            v-else
-            class="note-title"
-            @dblclick.prevent="startEditing(note.id, note.title)"
-          >
-            {{ note.title }}
-          </div>
-          <el-button
-            class="delete-button"
-            :icon="Edit"
-            text
-            circle
-            size="small"
-            title="编辑笔记标题"
-            @click="startEditing(note.id, note.title)"
-          ></el-button>
+    <el-button
+      v-if="sidebarSize > 120"
+      :icon="Close"
+      text
+      circle
+      title="关闭笔迹列表"
+      @click="closeSidebar"
+    >
+    </el-button>
+  </div>
+  <!-- 笔记列表内容 -->
+  <div class="note-content">
+    <div
+      v-for="note in noteStore.noteList"
+      :key="note.id"
+      class="note-item"
+      :class="{
+        'is-active': note.id === $route.params.noteId
+      }"
+      @click="() => $router.push(`/${note.id}`)"
+    >
+      <!-- 标题部分：根据是否在编辑状态，显示输入框或文本 -->
+      <div class="note-up">
+        <el-input
+          v-if="editingNoteId === note.id"
+          :ref="
+            (el: any) => {
+              if (el) editingRef = el
+            }
+          "
+          v-model="editingTitle"
+          size="small"
+          @blur="endEditing"
+          @keyup.enter="endEditing"
+        ></el-input>
+        <div
+          v-else
+          class="note-title"
+          @dblclick.prevent="startEditing(note.id, note.title)"
+        >
+          {{ note.title }}
         </div>
-        <!-- 日期及删除 -->
-        <div class="note-under">
-          <div class="note-date">
-            {{ new Date(note.createdTime).toLocaleDateString() }}
-          </div>
-          <!-- 删除功能 -->
-          <el-button
-            class="delete-button"
-            :icon="Delete"
-            text
-            circle
-            size="small"
-            title="删除笔记"
-            @click.stop="deleteNote(note.id)"
-          />
+        <el-button
+          class="delete-button"
+          :icon="Edit"
+          text
+          circle
+          size="small"
+          title="编辑笔记标题"
+          @click="startEditing(note.id, note.title)"
+        ></el-button>
+      </div>
+      <!-- 日期及删除 -->
+      <div class="note-under">
+        <div class="note-date">
+          {{ new Date(note.createdTime).toLocaleDateString() }}
         </div>
+        <!-- 删除功能 -->
+        <el-button
+          class="delete-button"
+          :icon="Delete"
+          text
+          circle
+          size="small"
+          title="删除笔记"
+          @click.stop="deleteNote(note.id)"
+        />
       </div>
     </div>
   </div>
@@ -166,11 +164,10 @@ const handleCreateNote = async () => {
 .sidebar-header {
   height: 32px;
   padding: 10px 10px;
-  background-color: #f9f9fb;
+  background-color: #f5f7f6;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
 
   .note-create {
     display: flex;
@@ -178,7 +175,13 @@ const handleCreateNote = async () => {
   }
 }
 .note-content {
-  padding: 0 10px;
+  // 滚动条样式
+  scrollbar-width: thin;
+  scrollbar-color: #a8a8a8 #f5f7f6;
+  flex: 1;
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding: 10px 10px 0;
   .note-item {
     background-color: #fafafa;
     display: block;
@@ -186,7 +189,6 @@ const handleCreateNote = async () => {
     border-radius: 6px;
     cursor: pointer;
     text-decoration: none;
-    color: #333;
     margin-bottom: 5px;
     transition: background-color 0.2s; // 添加一个过渡效果
 

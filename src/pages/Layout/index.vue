@@ -3,7 +3,7 @@ import { useDebounceFn } from '@vueuse/core'
 import { ref, watch } from 'vue'
 
 // 笔记列表宽度
-const sidebarSize = ref(Number(localStorage.getItem('sidebar-size')) ?? 180)
+const sidebarSize = ref(Number(localStorage.getItem('sidebar-size') ?? 180))
 // 关闭笔记列表前的宽度，使笔记列表在打开时保持上次关闭时的宽度
 let lastSidebarSize = Number(localStorage.getItem('lastSidebar-size')) || 180
 

@@ -119,26 +119,7 @@ watch(noteContent, (newContent) => {
   saveNoteContent(newContent)
 })
 
-// 当编辑区容器宽度变化时，重新计算textarea高度
-const editorRef = ref<HTMLElement | null>(null)
-const remeasureTextarea = useDebounceFn(() => {
-  nextTick(() => textareaRef.value?.resizeTextarea())
-}, 50)
-useResizeObserver(editorRef, () => {
-  remeasureTextarea()
-})
-watch(
-  () => props.sidebarSize,
-  () => remeasureTextarea()
-)
-// onMounted(() => {
-//   window.addEventListener('resize', remeasureTextarea)
-// })
-// onUnmounted(() => {
-//   window.removeEventListener('resize', remeasureTextarea)
-// })
-
-const editorSize = ref(Number(localStorage.getItem('editor-size')) || 550)
+const editorSize = ref(Number(localStorage.getItem('editor-size')) || 650)
 onMounted(() => {
   emits('editor-size', editorSize.value)
 })
@@ -149,24 +130,19 @@ watch(editorSize, (val) => {
 
 <template>
   <el-splitter-panel v-model:size="editorSize" min="30%">
-    <div class="toggle-button-wrapper">
-      <el-button
-        :class="{ 'icon-show': sidebarSize < 1 }"
-        :icon="ArrowRight"
-        title="打开笔记列表 "
-        @click="openSidebar"
-      />
+    <div v-if="sidebarSize < 1" class="toggle-button-wrapper">
+      <el-icon style="cursor: pointer" @click="openSidebar">
+        <Expand />
+      </el-icon>
     </div>
     <div class="panel-content">
-      <div v-if="currentNote" ref="editorRef" class="editor-pane">
-        <div class="panel-title" :class="{ 'title-active': sidebarSize < 1 }">
-          <h3>编辑区</h3>
-        </div>
-        <el-input
-          ref="textareaRef"
+      <div class="panel-title" :class="{ 'title-active': sidebarSize < 1 }">
+        <h3>编辑区</h3>
+      </div>
+      <div v-if="currentNote" class="editor-pane">
+        <textarea
+          ref="editorRef"
           v-model="noteContent"
-          type="textarea"
-          autosize
           class="editor-textarea"
           placeholder="请输入内容..."
         />
@@ -189,75 +165,70 @@ watch(editorSize, (val) => {
 
 <style scoped lang="scss">
 .el-splitter-panel {
+  position: relative;
+  // padding: 10px;
   box-sizing: border-box;
   .toggle-button-wrapper {
-    :deep(.el-button) {
-      position: fixed;
-      left: -30px;
-      top: 10px;
-      z-index: 20;
-      width: 20px;
-      background: transparent;
-      border: none;
-    }
-    .icon-show {
-      left: -10px;
-      transition: all 0.5s;
-    }
+    position: absolute;
+    left: 0;
+    top: 18px;
   }
 
   .panel-content {
-    z-index: 1;
     box-sizing: border-box;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
 
-    .placeholder {
-      padding: 20px;
-      color: #909399;
-    }
     .panel-title {
       box-sizing: border-box;
       padding: 10px;
       background-color: #f5f7f6;
     }
-
     .title-active {
       padding-left: 20px;
       transition: all 0.5s;
     }
+    .placeholder {
+      padding: 20px;
+      color: #909399;
+    }
 
     .editor-pane {
-      overflow-y: auto;
       box-sizing: border-box;
       flex: 1;
 
-      // 滚动条样式
-      scrollbar-width: thin;
-      scrollbar-color: #a8a8a8 #fff;
-
-      :deep(.editor-textarea .el-textarea__inner) {
+      .editor-textarea {
+        // 滚动条样式
+        scrollbar-width: thin;
+        scrollbar-color: #a8a8a8 #fff;
+        display: block;
+        box-sizing: border-box;
+        width: 100% !important;
+        height: 100% !important;
         color: #000;
         outline: none;
         resize: none;
-        // box-sizing: border-box;
-        box-shadow: none;
         width: 100%;
-        padding: 20px 20px 0;
+        padding: 10px 20px 0;
+        overflow-y: auto;
         border: none;
         outline: none;
         white-space: pre-wrap; /* 保留换行 */
         word-break: break-word;
-        overflow-y: hidden;
+        // overflow-y: hidden;
         font: 16px/1.5 'inherit';
       }
     }
 
     .markdown-body {
+      overflow-y: auto;
+      // 滚动条样式
+      scrollbar-width: thin;
+      scrollbar-color: #a8a8a8 #fff;
       line-height: 1.5;
-      padding: 0 20px 0;
+      padding: 0 20px;
       flex: 1;
       :deep(img) {
         max-width: 100%;
