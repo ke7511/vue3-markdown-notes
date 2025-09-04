@@ -165,6 +165,7 @@ watch(editorSize, (val) => {
 
 <style scoped lang="scss">
 .el-splitter-panel {
+  
   position: relative;
   // padding: 10px;
   box-sizing: border-box;

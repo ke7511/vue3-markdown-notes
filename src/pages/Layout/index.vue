@@ -64,6 +64,7 @@ const handleResizeEnd = () => {
 
 <style lang="scss" scoped>
 .app-container {
+  --el-border-color-light: #f5f7f6;
   height: 100vh;
   width: 100vw;
 
