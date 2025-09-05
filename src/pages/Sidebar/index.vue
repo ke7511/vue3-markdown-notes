@@ -1,0 +1,134 @@
+<script setup lang="ts">
+import { useNoteStore } from '@/stores/note'
+import SidebarHeader from './components/SidebarHeader.vue'
+import NoteItem from './components/SidebarNoteItem.vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useRoute, useRouter } from 'vue-router'
+import { useDebounceFn } from '@vueuse/core'
+import { ref, watch } from 'vue'
+import { useSidebarStore } from '@/stores/sidebar'
+import { storeToRefs } from 'pinia'
+
+const noteStore = useNoteStore()
+const route = useRoute()
+const router = useRouter()
+
+// 笔记列表宽度
+const { sidebarSize } = storeToRefs(useSidebarStore())
+// 关闭笔记列表前的宽度，使笔记列表在打开时保持上次关闭时的宽度
+let lastSidebarSize = Number(localStorage.getItem('lastSidebar-size')) || 180
+
+// 点击关闭笔记列表
+const closeSidebar = () => {
+  lastSidebarSize = sidebarSize.value
+  sidebarSize.value = 0
+}
+
+// 点击开启笔记列表
+const openSidebar = () => {
+  sidebarSize.value = lastSidebarSize
+}
+defineExpose({ openSidebar })
+
+// 记录笔记列表宽度
+watch(
+  sidebarSize,
+  useDebounceFn((val) => {
+    localStorage.setItem('sidebar-size', val + '')
+    if (val > 0) {
+      localStorage.setItem('lastSidebar-size', val + '')
+    } else {
+      localStorage.setItem('sidebar-size', '0')
+    }
+  }, 500)
+)
+
+// 新建笔记
+const handleCreateNote = async () => {
+  const newNoteId = await noteStore.createNote()
+  router.push(`/${newNoteId}`)
+}
+
+// 编辑标题
+const handleEdit = (id: string, title: string) => {
+  noteStore.updateNoteTitle(id, title)
+}
+
+// 删除笔记
+const handleDelete = (id: string) => {
+  ElMessageBox.confirm('您确定要删除这篇笔记吗？此操作不可撤销。', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    await noteStore.deleteNote(id)
+    if (route.params.noteId === id) {
+      if (noteStore.noteList.length > 0) {
+        router.push(`/${noteStore.noteList[0].id}`)
+      } else {
+        router.push('/')
+      }
+    }
+    ElMessage.success('删除成功')
+  })
+}
+
+// 路由跳转
+const handleNavigate = (id: string) => {
+  router.push(`/${id}`)
+}
+</script>
+
+<template>
+  <el-splitter-panel
+    v-if="sidebarSize > 0"
+    v-model:size="sidebarSize"
+    min="8%"
+    max="25%"
+  >
+    <div class="panel-list">
+      <!-- NoteList -->
+      <div>
+        <SidebarHeader
+          :sidebar-size="sidebarSize"
+          @close-sidebar="closeSidebar"
+          @create-note="handleCreateNote"
+        />
+        <div class="note-content">
+          <NoteItem
+            v-for="note in noteStore.noteList"
+            :key="note.id"
+            :note="note"
+            :active="note.id === $route.params.noteId"
+            @edit="handleEdit"
+            @delete="handleDelete"
+            @navigate="handleNavigate"
+          />
+        </div>
+      </div>
+    </div>
+  </el-splitter-panel>
+</template>
+
+<style lang="scss" scoped>
+:deep(.el-splitter-panel) {
+  position: relative;
+  box-sizing: border-box;
+}
+.panel-list {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f7f6;
+
+  .note-content {
+    scrollbar-width: thin;
+    scrollbar-color: #a8a8a8 #f5f7f6;
+    flex: 1;
+    box-sizing: border-box;
+    overflow-y: auto;
+    padding: 10px 10px 0;
+  }
+}
+</style>

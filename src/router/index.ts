@@ -11,10 +11,6 @@ const router = createRouter({
         {
           path: '/:noteId',
           component: () => import('@/pages/NoteView/index.vue')
-        },
-        {
-          path: 'settings',
-          component: () => import('@/pages/Settings/index.vue')
         }
       ]
     },
