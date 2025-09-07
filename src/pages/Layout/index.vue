@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, provide } from 'vue'
+import { ref, provide } from 'vue'
 import Sidebar from '@/pages/Sidebar/index.vue'
 
 // 记录编辑区宽度
@@ -8,13 +8,11 @@ const handleResizeEnd = () => {
   localStorage.setItem('editor-size', editorSize.value + '')
 }
 
+// 获取openSidebar并暴露给子组件
 const childNoteList = ref()
 provide('open-sidebar', () => {
   if (childNoteList.value) {
     childNoteList.value.openSidebar()
-    console.log('open-sidebar 被调用')
-  } else {
-    console.warn('Sidebar 尚未挂载')
   }
 })
 </script>

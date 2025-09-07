@@ -11,8 +11,18 @@ const useSidebar = useSidebarStore()
 const emits = defineEmits(['editor-size'])
 
 const route = useRoute()
-const { currentNote, noteContent, loadNoteAndResize } = useNoteLoader()
+const { currentNote, noteContent, loadNote } = useNoteLoader()
 
+// ✨ 新增：为 NoteEditor 组件创建一个 ref
+const noteEditorRef = ref<InstanceType<typeof NoteEditor> | null>(null)
+
+// ✨ 新增：创建一个新的函数来组合数据加载和 DOM 操作
+const loadNoteAndFocus = async (noteId: string) => {
+  loadNote(noteId) // 1. 调用 composable 加载数据
+  // 2. 调用子组件暴露的方法来聚焦
+  // noteEditorRef.value 可能会是 null，所以用可选链 ?.
+  noteEditorRef.value?.focusTextarea()
+}
 // 打开笔记列表
 const openSidebarFn = inject<() => void>('open-sidebar')
 const openSidebar = () => {
@@ -27,7 +37,7 @@ onMounted(() => {
     ? route.params.noteId[0]
     : route.params.noteId
   if (id) {
-    loadNoteAndResize(id)
+    loadNoteAndFocus(id)
   }
 })
 
@@ -37,7 +47,7 @@ watch(
   (newId) => {
     if (newId) {
       const id = Array.isArray(newId) ? newId[0] : newId
-      loadNoteAndResize(id)
+      loadNoteAndFocus(id)
     }
   }
 )
@@ -67,7 +77,11 @@ watch(editorSize, (val) => {
       >
         <h3>编辑区</h3>
       </div>
-      <NoteEditor v-model="noteContent" :current-note="currentNote" />
+      <NoteEditor
+        ref="noteEditorRef"
+        v-model="noteContent"
+        :current-note="currentNote"
+      />
     </div>
   </el-splitter-panel>
 

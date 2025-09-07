@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { watch, ref, onMounted, nextTick } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import type { NoteType } from '@/stores/note'
 import { useNoteStore } from '@/stores/note'
@@ -11,6 +11,7 @@ const props = defineProps<{
 const emit = defineEmits(['update:noteContent'])
 
 const noteStore = useNoteStore()
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
 
 // 监听 noteContent 的变化，并更新笔记内容
 const noteContent = defineModel<string>({ required: true })
@@ -23,11 +24,28 @@ const saveNoteContent = useDebounceFn((newContent: string) => {
 watch(noteContent, (newContent) => {
   saveNoteContent(newContent)
 })
+
+// ✨ 新增：创建一个方法，用于聚焦 textarea
+const focusTextarea = async () => {
+  await nextTick() // 确保 DOM 更新完毕
+  if (textareaRef.value) {
+    console.log('成功获取 textareaRef:', textareaRef.value)
+    textareaRef.value.focus()
+    // 如果你有 resizeTextarea 之类的方法，也在这里调用
+    // textareaRef.value.resizeTextarea()
+  }
+}
+
+// ✨ 新增：使用 defineExpose 将方法暴露给父组件
+defineExpose({
+  focusTextarea
+})
 </script>
 
 <template>
   <div v-if="currentNote" class="editor-pane">
     <textarea
+      ref="textareaRef"
       v-model="noteContent"
       class="editor-textarea"
       placeholder="请输入内容..."
@@ -50,7 +68,7 @@ watch(noteContent, (newContent) => {
     scrollbar-color: #a8a8a8 #fff;
     width: 100%;
     height: 100%;
-    padding: 10px 20px 0;
+    padding: 10px 20px 15px;
     border: none;
     outline: none;
     resize: none;
