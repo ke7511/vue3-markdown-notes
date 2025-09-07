@@ -1,20 +1,14 @@
 <script setup lang="ts">
-import { ref, provide } from 'vue'
 import Sidebar from '@/pages/Sidebar/index.vue'
+import { storeToRefs } from 'pinia'
+import { useSidebarStore } from '@/stores/sidebar'
+import { ref } from 'vue'
 
 // 记录编辑区宽度
-const editorSize = ref<number>(550)
+const editorSize = ref(550)
 const handleResizeEnd = () => {
   localStorage.setItem('editor-size', editorSize.value + '')
 }
-
-// 获取openSidebar并暴露给子组件
-const childNoteList = ref()
-provide('open-sidebar', () => {
-  if (childNoteList.value) {
-    childNoteList.value.openSidebar()
-  }
-})
 </script>
 
 <template>

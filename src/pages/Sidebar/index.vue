@@ -5,7 +5,7 @@ import NoteItem from './components/SidebarNoteItem.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { useDebounceFn } from '@vueuse/core'
-import { ref, watch } from 'vue'
+import { watch } from 'vue'
 import { useSidebarStore } from '@/stores/sidebar'
 import { storeToRefs } from 'pinia'
 
@@ -13,35 +13,20 @@ const noteStore = useNoteStore()
 const route = useRoute()
 const router = useRouter()
 
-// 笔记列表宽度
 const { sidebarSize } = storeToRefs(useSidebarStore())
-// 关闭笔记列表前的宽度，使笔记列表在打开时保持上次关闭时的宽度
-let lastSidebarSize = Number(localStorage.getItem('lastSidebar-size')) || 180
-
-// 点击关闭笔记列表
-const closeSidebar = () => {
-  lastSidebarSize = sidebarSize.value
-  sidebarSize.value = 0
-}
-
-// 点击开启笔记列表
-const openSidebar = () => {
-  sidebarSize.value = lastSidebarSize
-}
-defineExpose({ openSidebar })
 
 // 记录笔记列表宽度
-watch(
-  sidebarSize,
-  useDebounceFn((val) => {
-    localStorage.setItem('sidebar-size', val + '')
-    if (val > 0) {
-      localStorage.setItem('lastSidebar-size', val + '')
-    } else {
-      localStorage.setItem('sidebar-size', '0')
-    }
-  }, 500)
-)
+// watch(
+//   sidebarStore.sidebarSize,
+//   useDebounceFn((val) => {
+//     localStorage.setItem('sidebar-size', val + '')
+//     if (val > 0) {
+//       localStorage.setItem('lastSidebar-size', val + '')
+//     } else {
+//       localStorage.setItem('sidebar-size', '0')
+//     }
+//   }, 500)
+// )
 
 // 新建笔记
 const handleCreateNote = async () => {
@@ -89,11 +74,7 @@ const handleNavigate = (id: string) => {
     <div class="panel-list">
       <!-- NoteList -->
       <div>
-        <SidebarHeader
-          :sidebar-size="sidebarSize"
-          @close-sidebar="closeSidebar"
-          @create-note="handleCreateNote"
-        />
+        <SidebarHeader @create-note="handleCreateNote" />
         <div class="note-content">
           <NoteItem
             v-for="note in noteStore.noteList"

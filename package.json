@@ -25,6 +25,7 @@
     "markdown-it": "^14.1.0",
     "normalize.css": "^8.0.1",
     "pinia": "^3.0.3",
+    "pinia-plugin-persistedstate": "^4.5.0",
     "sass": "^1.90.0",
     "splitpanes": "^4.0.4",
     "vditor": "^3.11.1",

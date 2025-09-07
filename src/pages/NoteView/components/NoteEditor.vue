@@ -25,18 +25,15 @@ watch(noteContent, (newContent) => {
   saveNoteContent(newContent)
 })
 
-// ✨ 新增：创建一个方法，用于聚焦 textarea
+// 创建一个方法，用于聚焦 textarea
 const focusTextarea = async () => {
   await nextTick() // 确保 DOM 更新完毕
   if (textareaRef.value) {
-    console.log('成功获取 textareaRef:', textareaRef.value)
     textareaRef.value.focus()
-    // 如果你有 resizeTextarea 之类的方法，也在这里调用
-    // textareaRef.value.resizeTextarea()
   }
 }
 
-// ✨ 新增：使用 defineExpose 将方法暴露给父组件
+// 使用 defineExpose 将方法暴露给父组件
 defineExpose({
   focusTextarea
 })

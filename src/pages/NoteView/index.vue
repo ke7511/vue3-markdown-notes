@@ -7,28 +7,19 @@ import NotePreview from './components/NotePreview.vue'
 import { useNoteLoader } from '@/composables/useNoteLoader'
 import { useSidebarStore } from '@/stores/sidebar'
 
-const useSidebar = useSidebarStore()
+const sidebarStore = useSidebarStore()
 const emits = defineEmits(['editor-size'])
 
 const route = useRoute()
 const { currentNote, noteContent, loadNote } = useNoteLoader()
 
-// ✨ 新增：为 NoteEditor 组件创建一个 ref
+// 为 NoteEditor 组件创建一个 ref
 const noteEditorRef = ref<InstanceType<typeof NoteEditor> | null>(null)
 
-// ✨ 新增：创建一个新的函数来组合数据加载和 DOM 操作
+// 创建一个新的函数来组合数据加载和 DOM 操作
 const loadNoteAndFocus = async (noteId: string) => {
-  loadNote(noteId) // 1. 调用 composable 加载数据
-  // 2. 调用子组件暴露的方法来聚焦
-  // noteEditorRef.value 可能会是 null，所以用可选链 ?.
+  loadNote(noteId)
   noteEditorRef.value?.focusTextarea()
-}
-// 打开笔记列表
-const openSidebarFn = inject<() => void>('open-sidebar')
-const openSidebar = () => {
-  if (openSidebarFn) {
-    openSidebarFn()
-  }
 }
 
 // 加载笔记
@@ -65,15 +56,15 @@ watch(editorSize, (val) => {
 
 <template>
   <el-splitter-panel v-model:size="editorSize" min="30%">
-    <div v-if="useSidebar.sidebarSize < 1" class="toggle-button-wrapper">
-      <el-icon style="cursor: pointer" @click="openSidebar">
+    <div v-if="sidebarStore.sidebarSize < 1" class="toggle-button-wrapper">
+      <el-icon style="cursor: pointer" @click="sidebarStore.openSidebar()">
         <Expand />
       </el-icon>
     </div>
     <div class="panel-content">
       <div
         class="panel-title"
-        :class="{ 'title-active': useSidebar.sidebarSize < 1 }"
+        :class="{ 'title-active': sidebarStore.sidebarSize < 1 }"
       >
         <h3>编辑区</h3>
       </div>

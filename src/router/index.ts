@@ -13,10 +13,6 @@ const router = createRouter({
           component: () => import('@/pages/NoteView/index.vue')
         }
       ]
-    },
-    {
-      path: '/:pathMatch(.*)*',
-      component: () => import('@/pages/NotFound/index.vue')
     }
   ]
 })
