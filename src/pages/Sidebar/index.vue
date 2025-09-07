@@ -15,19 +15,6 @@ const router = useRouter()
 
 const { sidebarSize } = storeToRefs(useSidebarStore())
 
-// 记录笔记列表宽度
-// watch(
-//   sidebarStore.sidebarSize,
-//   useDebounceFn((val) => {
-//     localStorage.setItem('sidebar-size', val + '')
-//     if (val > 0) {
-//       localStorage.setItem('lastSidebar-size', val + '')
-//     } else {
-//       localStorage.setItem('sidebar-size', '0')
-//     }
-//   }, 500)
-// )
-
 // 新建笔记
 const handleCreateNote = async () => {
   const newNoteId = await noteStore.createNote()

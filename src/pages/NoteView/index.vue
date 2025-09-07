@@ -57,7 +57,11 @@ watch(editorSize, (val) => {
 <template>
   <el-splitter-panel v-model:size="editorSize" min="30%">
     <div v-if="sidebarStore.sidebarSize < 1" class="toggle-button-wrapper">
-      <el-icon style="cursor: pointer" @click="sidebarStore.openSidebar()">
+      <el-icon
+        style="cursor: pointer"
+        title="打开笔记列表"
+        @click="sidebarStore.openSidebar()"
+      >
         <Expand />
       </el-icon>
     </div>
