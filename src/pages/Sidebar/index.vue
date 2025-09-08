@@ -60,19 +60,17 @@ const handleNavigate = (id: string) => {
   >
     <div class="panel-list">
       <!-- NoteList -->
-      <div>
-        <SidebarHeader @create-note="handleCreateNote" />
-        <div class="note-content">
-          <NoteItem
-            v-for="note in noteStore.noteList"
-            :key="note.id"
-            :note="note"
-            :active="note.id === $route.params.noteId"
-            @edit="handleEdit"
-            @delete="handleDelete"
-            @navigate="handleNavigate"
-          />
-        </div>
+      <SidebarHeader @create-note="handleCreateNote" />
+      <div class="note-content">
+        <NoteItem
+          v-for="note in noteStore.noteList"
+          :key="note.id"
+          :note="note"
+          :active="note.id === $route.params.noteId"
+          @edit="handleEdit"
+          @delete="handleDelete"
+          @navigate="handleNavigate"
+        />
       </div>
     </div>
   </el-splitter-panel>

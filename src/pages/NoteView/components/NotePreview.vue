@@ -4,9 +4,7 @@ import DOMPurify from 'dompurify'
 import markdownit from 'markdown-it'
 import hljs from 'highlight.js/lib/common'
 import 'highlight.js/styles/github.css'
-import { CopyDocument } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
-import { useDebounceFn } from '@vueuse/core'
+import { addCopyButton } from '@/utils/copyButton'
 
 const props = defineProps<{ content: string }>()
 
@@ -34,56 +32,13 @@ const markdownRef = ref<HTMLDivElement | null>(null)
 // 将 SVG 图标定义为一个常量，方便管理
 const copyIconSVG =
   '<svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M768 832a128 128 0 0 1-128 128H192A128 128 0 0 1 64 832V384a128 128 0 0 1 128-128v64a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64z"></path><path fill="currentColor" d="M384 128a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64V192a64 64 0 0 0-64-64zm0-64h448a128 128 0 0 1 128 128v448a128 128 0 0 1-128 128H384a128 128 0 0 1-128-128V192A128 128 0 0 1 384 64"></path></svg>'
-const addCopyButton = () => {
-  if (!markdownRef.value) return
-  const codeBlocks = markdownRef.value.querySelectorAll('pre.hljs')
-  codeBlocks.forEach((code) => {
-    if (code.querySelector('.copy-button')) {
-      return
-    }
-    // 创建一个包裹元素，用于按钮的相对定位
-    const wrapper = document.createElement('div')
-    wrapper.className = 'code-wrapper'
-    // 将包裹元素插入到 <pre> 标签之前，再把 <pre> 标签挪进去
-    code.parentNode?.insertBefore(wrapper, code)
-    wrapper.appendChild(code)
-
-    // 创建一个标准的 HTML button 元素
-    const copyButton = document.createElement('button')
-    copyButton.className = 'copy-button'
-    copyButton.title = '复制代码'
-    copyButton.innerHTML = copyIconSVG
-    // 将按钮添加到包裹元素中
-    wrapper.appendChild(copyButton)
-
-    // 添加点击事件
-    let timerId = <number | null>null
-    copyButton.addEventListener('click', () => {
-      if (timerId) {
-        clearTimeout(timerId)
-      }
-      if (!copyButton.classList.contains('copied')) {
-        const codeContent = code.querySelector('code')?.innerText
-        if (codeContent) {
-          // 使用浏览器的剪贴板 API
-          navigator.clipboard.writeText(codeContent).then(() => {
-            copyButton.classList.add('copied')
-          })
-        }
-      }
-      timerId = setTimeout(() => {
-        copyButton.classList.remove('copied')
-      }, 2000)
-    })
-  })
-}
 
 // 侦听 props.content 的变化, 并在 DOM 更新后执行添加按钮的函数
 watch(
   () => props.content,
   () => {
     nextTick(() => {
-      addCopyButton()
+      addCopyButton(copyIconSVG, markdownRef.value)
     })
   },
   { immediate: true }
@@ -111,7 +66,7 @@ watch(
   }
   :deep(pre) {
     background-color: #f5f7f6;
-    border-radius: 5px;
+    border-radius: 7px;
     padding: 10px;
     white-space: pre-wrap;
     word-wrap: break-word;
