@@ -28,7 +28,7 @@ watch(noteContent, (newContent) => {
 // 创建一个方法，用于聚焦 textarea
 const focusTextarea = async () => {
   await nextTick() // 确保 DOM 更新完毕
-  if (textareaRef.value) {
+  if (textareaRef.value && noteContent.value === '') {
     textareaRef.value.focus()
   }
 }

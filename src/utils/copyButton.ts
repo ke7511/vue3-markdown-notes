@@ -40,7 +40,7 @@ export const addCopyButton = (
       }
       timerId = setTimeout(() => {
         copyButton.classList.remove('copied')
-      }, 2000)
+      }, 1300)
     })
   })
 }

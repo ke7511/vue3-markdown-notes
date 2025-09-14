@@ -54,6 +54,7 @@ watch(
 .markdown-body {
   flex: 1;
   padding: 0 20px;
+  overflow-wrap: break-word;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #a8a8a8 #fff;
