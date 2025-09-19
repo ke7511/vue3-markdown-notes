@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import Sidebar from '@/pages/Sidebar/index.vue'
-import { storeToRefs } from 'pinia'
-import { useSidebarStore } from '@/stores/sidebar'
 import { ref } from 'vue'
 
 // 记录编辑区宽度

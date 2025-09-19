@@ -14,7 +14,7 @@ export interface NoteType {
 export const useNoteStore = defineStore('note', () => {
   const noteList = ref<NoteType[]>([])
 
-  // 4. 新增一个 action，用于从数据库加载所有笔记
+  // 新增一个 action，用于从数据库加载所有笔记
   const loadFromDB = async () => {
     // toArray() 是 Dexie 的方法，用于获取表中的所有记录
     const notesFromDB = await db.notes.toArray()

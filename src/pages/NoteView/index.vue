@@ -117,5 +117,8 @@ watch(editorSize, (val) => {
   position: absolute;
   left: 0;
   top: 18px;
+  :deep(.el-icon):hover {
+    background-color: #fafafa;
+  }
 }
 </style>

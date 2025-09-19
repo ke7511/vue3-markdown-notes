@@ -4,8 +4,6 @@ import SidebarHeader from './components/SidebarHeader.vue'
 import NoteItem from './components/SidebarNoteItem.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import { useDebounceFn } from '@vueuse/core'
-import { watch } from 'vue'
 import { useSidebarStore } from '@/stores/sidebar'
 import { storeToRefs } from 'pinia'
 

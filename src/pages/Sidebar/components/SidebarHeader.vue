@@ -46,6 +46,9 @@ const handleCreateNote = () => emit('create-note')
   display: flex;
   justify-content: space-between;
   align-items: center;
+  :deep(.el-button):hover {
+    background-color: #fafafa;
+  }
 
   .note-create {
     display: flex;
