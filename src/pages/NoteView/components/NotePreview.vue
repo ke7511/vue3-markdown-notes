@@ -59,13 +59,17 @@ watch(
   scrollbar-width: thin;
   scrollbar-color: #a8a8a8 #fff;
   line-height: 1.5;
-
+  :deep(h1) {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.3em;
+  }
   :deep(img) {
     max-width: 100%;
     height: auto;
     display: block;
   }
-  :deep(pre) {
+  // 代码块
+  :deep(.hljs) {
     background-color: #f5f7f6;
     border-radius: 7px;
     padding: 10px;
@@ -73,9 +77,11 @@ watch(
     word-wrap: break-word;
     overflow-x: auto;
   }
-  :deep(h1) {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.3em;
+  // 行内代码
+  :deep(p > code) {
+    background: #f5f7f6;
+    border-radius: 4px;
+    padding: 5px;
   }
   :deep(code) {
     font-family: 'Consolas', monospace;
