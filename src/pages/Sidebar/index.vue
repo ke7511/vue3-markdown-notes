@@ -6,12 +6,18 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { useSidebarStore } from '@/stores/sidebar'
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
+import { useWindowSize } from '@vueuse/core'
 
 const noteStore = useNoteStore()
 const route = useRoute()
 const router = useRouter()
 
 const { sidebarSize } = storeToRefs(useSidebarStore())
+const { width } = useWindowSize()
+const isSidebarVisible = computed(
+  () => sidebarSize.value > 0 && width.value > 850
+)
 
 // 新建笔记
 const handleCreateNote = async () => {
@@ -48,10 +54,9 @@ const handleNavigate = (id: string) => {
   router.push(`/${id}`)
 }
 </script>
-
 <template>
   <el-splitter-panel
-    v-if="sidebarSize > 0"
+    v-if="isSidebarVisible"
     v-model:size="sidebarSize"
     min="8%"
     max="25%"
