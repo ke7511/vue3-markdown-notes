@@ -67,7 +67,7 @@ watch(editorSize, (val) => {
     </div>
     <div class="panel-content">
       <div
-        class="panel-title"
+        class="panel-title panel-title-editor"
         :class="{ 'title-active': sidebarStore.sidebarSize < 1 }"
       >
         <h3>编辑区</h3>
@@ -82,7 +82,7 @@ watch(editorSize, (val) => {
 
   <el-splitter-panel min="30%">
     <div class="panel-content">
-      <div class="panel-title">
+      <div class="panel-title panel-title-preview">
         <h3>预览区</h3>
       </div>
       <NotePreview :content="noteContent" />
@@ -98,8 +98,34 @@ watch(editorSize, (val) => {
   height: 100%;
 
   .panel-title {
+    position: relative;
     padding: 10px;
-    background-color: #f5f7f6;
+    border-bottom: 1px solid #dddfe5;
+    z-index: 10;
+  }
+
+  .panel-title-editor::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 1px;
+    background-color: #dddfe5;
+    transform: scaleX(0.5);
+    transform-origin: right;
+  }
+
+  .panel-title-preview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    background-color: #dddfe5;
+    transform: scaleX(0.5);
+    transform-origin: left;
   }
 
   .title-active {

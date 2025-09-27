@@ -59,15 +59,18 @@ watch(
   scrollbar-width: thin;
   scrollbar-color: #a8a8a8 #fff;
   line-height: 1.5;
+
   :deep(h1) {
     border-bottom: 1px solid #eee;
     padding-bottom: 0.3em;
   }
+
   :deep(img) {
     max-width: 100%;
     height: auto;
     display: block;
   }
+
   // 代码块
   :deep(.hljs) {
     background-color: #f5f7f6;
@@ -77,12 +80,14 @@ watch(
     word-wrap: break-word;
     overflow-x: auto;
   }
+
   // 行内代码
   :deep(p > code) {
     background: #f5f7f6;
     border-radius: 4px;
     padding: 5px;
   }
+
   :deep(code) {
     font-family: 'Consolas', monospace;
   }
@@ -91,6 +96,7 @@ watch(
   :deep(.code-wrapper) {
     position: relative;
   }
+
   :deep(.copy-button) {
     position: absolute;
     top: 8px;
@@ -113,6 +119,7 @@ watch(
     // gap 会自动在 ::before 伪元素和 SVG 之间应用间距
     gap: 6px;
   }
+
   :deep(.copy-button svg) {
     width: 16px;
     height: 16px;
@@ -125,6 +132,7 @@ watch(
   :deep(.code-wrapper:hover .copy-button) {
     opacity: 1;
   }
+
   /* 当 .copy-button 拥有 .copied 类时，为其 ::before 伪元素设置内容和样式 */
   :deep(.copy-button.copied::before) {
     content: '已复制';
@@ -134,6 +142,7 @@ watch(
   :deep(.copy-button:not(.copied):hover) {
     background-color: #fefafa;
   }
+
   /* 复制成功后的状态，现在只改变背景色 */
   :deep(.copy-button.copied) {
     background-color: #fefafa;
