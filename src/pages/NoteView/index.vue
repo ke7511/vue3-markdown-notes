@@ -140,11 +140,19 @@ watch(editorSize, (val) => {
   }
 }
 .toggle-button-wrapper {
+  z-index: 999;
   position: absolute;
   left: 0;
   top: 18px;
   :deep(.el-icon):hover {
     background-color: #fafafa;
+  }
+}
+:deep(.el-splitter-bar__dragger) {
+  display: none;
+  background-color: #fff;
+  &::before {
+    background-color: #fff;
   }
 }
 </style>
