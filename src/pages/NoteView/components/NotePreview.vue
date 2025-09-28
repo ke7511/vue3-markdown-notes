@@ -21,7 +21,7 @@ const md = new markdownit({
   }
 })
 
-// 创建一个计算属性，用于实时渲染预览区的 HTML
+// 创建一个计算属性，用于实时渲染预览区的 HTML，并防范XSS
 const renderedMarkdown = computed(() =>
   DOMPurify.sanitize(md.render(props.content))
 )
