@@ -19,7 +19,7 @@ const saveNoteContent = useDebounceFn((newContent: string) => {
   if (props.currentNote) {
     noteStore.updateNoteContent(props.currentNote.id, newContent)
   }
-}, 500)
+}, 800)
 
 watch(noteContent, (newContent) => {
   saveNoteContent(newContent)

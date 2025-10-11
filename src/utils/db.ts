@@ -45,4 +45,3 @@ db.on('populate', async () => {
 })
 
 export { db }
-export type { NoteType }

@@ -40,8 +40,7 @@ watch(
     nextTick(() => {
       addCopyButton(copyIconSVG, markdownRef.value)
     })
-  },
-  { immediate: true }
+  }
 )
 </script>
 
