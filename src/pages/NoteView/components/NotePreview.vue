@@ -5,6 +5,7 @@ import markdownit from 'markdown-it'
 import hljs from 'highlight.js/lib/common'
 import 'highlight.js/styles/github.css'
 import { addCopyButton } from '@/utils/copyButton'
+import { throttle } from 'lodash-es' // *** 引入 throttle ***
 
 const props = defineProps<{ content: string }>()
 
@@ -21,9 +22,24 @@ const md = new markdownit({
   }
 })
 
-// 创建一个计算属性，用于实时渲染预览区的 HTML，并防范XSS
+// 存储经过节流处理后的内容
+const throttledContent = ref(props.content)
+
+// 当props.content变化时，调用一个 throttled 函数来更新 throttledContent
+watch(
+  () => props.content,
+  throttle(
+    (newValue: string) => {
+      throttledContent.value = newValue
+    },
+    200,
+    // { leading: true, trailing: true } 保证第一次输入和最后一次输入都会触发更新，体验最好
+    { leading: true, trailing: true }
+  )
+)
+// 创建一个计算属性，依赖 throttledContent，用于实时渲染预览区的 HTML，并防范XSS
 const renderedMarkdown = computed(() =>
-  DOMPurify.sanitize(md.render(props.content))
+  DOMPurify.sanitize(md.render(throttledContent.value))
 )
 
 // 增加复制按钮
@@ -34,14 +50,11 @@ const copyIconSVG =
   '<svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M768 832a128 128 0 0 1-128 128H192A128 128 0 0 1 64 832V384a128 128 0 0 1 128-128v64a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64z"></path><path fill="currentColor" d="M384 128a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64V192a64 64 0 0 0-64-64zm0-64h448a128 128 0 0 1 128 128v448a128 128 0 0 1-128 128H384a128 128 0 0 1-128-128V192A128 128 0 0 1 384 64"></path></svg>'
 
 // 侦听 props.content 的变化, 并在 DOM 更新后执行添加按钮的函数
-watch(
-  () => props.content,
-  () => {
-    nextTick(() => {
-      addCopyButton(copyIconSVG, markdownRef.value)
-    })
-  }
-)
+watch(throttledContent, () => {
+  nextTick(() => {
+    addCopyButton(copyIconSVG, markdownRef.value)
+  })
+})
 </script>
 
 <template>

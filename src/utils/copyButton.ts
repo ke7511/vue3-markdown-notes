@@ -28,8 +28,7 @@ export const addCopyButton = (
     copyButton.addEventListener('click', () => {
       if (timerId) {
         clearTimeout(timerId)
-      }
-      if (!copyButton.classList.contains('copied')) {
+      } else if (!copyButton.classList.contains('copied')) {
         const codeContent = code.querySelector('code')?.innerText
         if (codeContent) {
           // 使用浏览器的剪贴板 API
