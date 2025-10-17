@@ -5,7 +5,7 @@ import markdownit from 'markdown-it'
 import hljs from 'highlight.js/lib/common'
 import 'highlight.js/styles/github.css'
 import { addCopyButton } from '@/utils/copyButton'
-import { throttle } from 'lodash-es' // *** 引入 throttle ***
+import { throttle } from 'lodash-es'
 
 const props = defineProps<{ content: string }>()
 
@@ -101,7 +101,7 @@ watch(throttledContent, () => {
   }
 
   :deep(code) {
-    font-family: 'Consolas', monospace;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   // 复制按钮样式
