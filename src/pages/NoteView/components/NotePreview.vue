@@ -101,7 +101,7 @@ watch(throttledContent, () => {
   }
 
   :deep(code) {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Consolas', 'JetBrains Mono', monospace;
   }
 
   // 复制按钮样式
