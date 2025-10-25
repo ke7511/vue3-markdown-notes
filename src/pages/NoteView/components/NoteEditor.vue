@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref, nextTick } from 'vue'
+import { watch, ref, nextTick, onUnmounted } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import type { NoteType } from '@/stores/note'
 import { useNoteStore } from '@/stores/note'
@@ -23,6 +23,13 @@ const saveNoteContent = useDebounceFn((newContent: string) => {
 
 watch(noteContent, (newContent) => {
   saveNoteContent(newContent)
+})
+
+// 组件卸载时保存内容
+onUnmounted(() => {
+  if (props.currentNote) {
+    noteStore.updateNoteContent(props.currentNote.id, noteContent.value)
+  }
 })
 
 // 创建一个方法，用于聚焦 textarea
