@@ -11,7 +11,6 @@ export const useNoteLoader = () => {
   const loadNote = async (noteId: string) => {
     const note = noteStore.getNoteById(noteId)
     if (note) {
-      console.log()
       currentNote.value = note
       noteContent.value = note.content
     } else {

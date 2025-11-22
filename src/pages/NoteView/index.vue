@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { onMounted, watch, ref, inject } from 'vue'
 import { useRoute } from 'vue-router'
-import { Expand } from '@element-plus/icons-vue'
+import { Download, Expand } from '@element-plus/icons-vue'
 import NoteEditor from './components/NoteEditor.vue'
 import NotePreview from './components/NotePreview.vue'
 import { useNoteLoader } from '@/composables/useNoteLoader'
 import { useSidebarStore } from '@/stores/sidebar'
+import { saveAs } from 'file-saver'
+import { ElMessage } from 'element-plus'
 
 const sidebarStore = useSidebarStore()
 const emits = defineEmits(['editor-size'])
@@ -52,6 +54,13 @@ watch(editorSize, (val) => {
   emits('editor-size', val)
   localStorage.setItem('editor-size', String(val))
 })
+
+// 导出为markdown
+const downloadMarkdown = () => {
+  const blob = new Blob([noteContent.value], { type: 'text/markdown' })
+  saveAs(blob, `${currentNote.value?.title}.md`)
+  ElMessage.success('导出成功')
+}
 </script>
 
 <template>
@@ -84,6 +93,14 @@ watch(editorSize, (val) => {
     <div class="panel-content">
       <div class="panel-title panel-title-preview">
         <h3>预览区</h3>
+        <el-button
+          class="md-export-btn"
+          title="导出为Markdown"
+          circle
+          @click="downloadMarkdown"
+        >
+          <el-icon :size="16"><Download /></el-icon>
+        </el-button>
       </div>
       <NotePreview :content="noteContent" />
     </div>
@@ -98,10 +115,15 @@ watch(editorSize, (val) => {
   height: 100%;
 
   .panel-title {
+    display: flex;
+    justify-content: space-between;
     position: relative;
     padding: 10px;
     border-bottom: 1px solid #dddfe5;
     z-index: 10;
+    .md-export-btn {
+      align-items: center;
+    }
   }
 
   .panel-title-editor::after {
