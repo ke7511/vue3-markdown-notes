@@ -93,14 +93,13 @@ const downloadMarkdown = () => {
     <div class="panel-content">
       <div class="panel-title panel-title-preview">
         <h3>预览区</h3>
-        <el-button
+        <img
           class="md-export-btn"
-          title="导出为Markdown"
-          circle
+          src="../../../public/Markdown-mark.svg"
+          title="导出为markdown"
+          alt="md"
           @click="downloadMarkdown"
-        >
-          <el-icon :size="16"><Download /></el-icon>
-        </el-button>
+        />
       </div>
       <NotePreview :content="noteContent" />
     </div>
@@ -118,11 +117,22 @@ const downloadMarkdown = () => {
     display: flex;
     justify-content: space-between;
     position: relative;
+    align-items: center;
     padding: 10px;
     border-bottom: 1px solid #dddfe5;
     z-index: 10;
     .md-export-btn {
-      align-items: center;
+      height: 20px;
+      width: auto;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      &:hover {
+        transform: scale(1.2);
+        filter: brightness(0.8);
+      }
+      &:active {
+        transform: scale(0.95);
+      }
     }
   }
 
