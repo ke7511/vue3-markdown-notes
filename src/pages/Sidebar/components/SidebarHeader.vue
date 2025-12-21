@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useSidebarStore } from '@/stores/sidebar'
 import { Close, Plus } from '@element-plus/icons-vue'
-import { defineEmits } from 'vue'
 
 const sidebarStore = useSidebarStore()
 // Emits

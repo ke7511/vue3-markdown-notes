@@ -4,7 +4,6 @@ import tseslint from 'typescript-eslint'
 import pluginVue from 'eslint-plugin-vue'
 import pluginPrettier from 'eslint-plugin-prettier'
 import configPrettier from 'eslint-config-prettier'
-// ✅ 正确引入 parser 模块
 import vueParser from 'vue-eslint-parser'
 
 export default tseslint.config(
@@ -17,9 +16,9 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      parser: vueParser, // ✅ 这里是模块，不是字符串
+      parser: vueParser,
       parserOptions: {
-        parser: tseslint.parser, // vue-eslint-parser 内部交给 TS parser
+        parser: tseslint.parser,
         ecmaVersion: 'latest',
         sourceType: 'module',
         extraFileExtensions: ['.vue']
