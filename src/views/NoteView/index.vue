@@ -112,8 +112,20 @@ const downloadMarkdown = () => {
 
 <style scoped lang="scss">
 :deep(.splitpanes__splitter) {
-  background-color: #f5f7f6;
-  width: 2px;
+  background-color: #dddfe4;
+  width: 1px;
+  position: relative;
+
+  // 扩大触发区域的透明伪元素
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: -8px; // 向右扩展8px
+    cursor: col-resize;
+  }
 }
 .panel-content {
   display: flex;
