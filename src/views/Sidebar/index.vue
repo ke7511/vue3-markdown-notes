@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useNoteStore } from '@/stores/note'
-import SidebarHeader from './components/SidebarHeader.vue'
-import NoteItem from './components/SidebarNoteItem.vue'
+import SidebarHeader from './modules/SidebarHeader.vue'
+import NoteItem from './modules/SidebarNoteItem.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { useSidebarStore } from '@/stores/sidebar'

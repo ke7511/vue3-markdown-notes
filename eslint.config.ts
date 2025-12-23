@@ -1,4 +1,4 @@
-// eslint.config.ts
+import { defineConfig } from 'eslint/config'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import pluginVue from 'eslint-plugin-vue'
@@ -6,7 +6,7 @@ import pluginPrettier from 'eslint-plugin-prettier'
 import configPrettier from 'eslint-config-prettier'
 import vueParser from 'vue-eslint-parser'
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: ['dist', 'node_modules', '.DS_Store']
   },

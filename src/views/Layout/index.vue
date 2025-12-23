@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Sidebar from '@/pages/Sidebar/index.vue'
+import Sidebar from '@/views/Sidebar/index.vue'
 import { ref } from 'vue'
 
 // 记录编辑区宽度

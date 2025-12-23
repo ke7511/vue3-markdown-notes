@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, watch, ref, inject } from 'vue'
+import { onMounted, watch, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { Download, Expand } from '@element-plus/icons-vue'
-import NoteEditor from './components/NoteEditor.vue'
-import NotePreview from './components/NotePreview.vue'
+import { Expand } from '@element-plus/icons-vue'
+import NoteEditor from './modules/NoteEditor.vue'
+import NotePreview from './modules/NotePreview.vue'
 import { useNoteLoader } from '@/composables/useNoteLoader'
 import { useSidebarStore } from '@/stores/sidebar'
 import { saveAs } from 'file-saver'

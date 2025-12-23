@@ -5,12 +5,12 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: () => import('@/pages/Layout/index.vue'),
+      component: () => import('@/views/Layout/index.vue'),
       redirect: '/note-welcome',
       children: [
         {
           path: '/:noteId',
-          component: () => import('@/pages/NoteView/index.vue')
+          component: () => import('@/views/NoteView/index.vue')
         }
       ]
     }
