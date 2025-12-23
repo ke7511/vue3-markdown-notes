@@ -31,8 +31,8 @@ export const useNoteStore = defineStore('note', () => {
 
   // 删除笔记
   const deleteNote = async (id: string) => {
-    await db.notes.delete(id)
     noteList.value = noteList.value.filter((note) => note.id !== id)
+    await db.notes.delete(id)
   }
 
   /**
@@ -41,10 +41,12 @@ export const useNoteStore = defineStore('note', () => {
    * @param newTitle 新的标题
    */
   const updateNoteTitle = async (id: string, newTitle: string) => {
-    await db.notes.update(id, { title: newTitle })
     const note = noteList.value.find((note) => note.id === id)
     if (note) {
       note.title = getUniqueTitle(newTitle, noteList.value, id)
+      if (note.title !== newTitle) {
+        await db.notes.update(id, { title: note.title })
+      }
     }
   }
 
@@ -56,17 +58,17 @@ export const useNoteStore = defineStore('note', () => {
       content: '',
       createdTime: Date.now()
     }
-    await db.notes.add(newNote)
     noteList.value.unshift(newNote)
+    await db.notes.add(newNote)
     return newNote.id
   }
 
   // 更新笔记内容
   const updateNoteContent = async (noteId: string, newContent: string) => {
-    await db.notes.update(noteId, { content: newContent })
     const note = noteList.value.find((note) => note.id === noteId)
     if (note) {
       note.content = newContent
+      await db.notes.update(noteId, { content: newContent })
     }
   }
   return {
