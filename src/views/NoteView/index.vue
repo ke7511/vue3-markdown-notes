@@ -8,6 +8,8 @@ import { useNoteLoader } from '@/composables/useNoteLoader'
 import { useSidebarStore } from '@/stores/sidebar'
 import { saveAs } from 'file-saver'
 import { ElMessage } from 'element-plus'
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
 
 const sidebarStore = useSidebarStore()
 const emits = defineEmits(['editor-size'])
@@ -64,55 +66,59 @@ const downloadMarkdown = () => {
 </script>
 
 <template>
-  <el-splitter-panel v-model:size="editorSize" min="30%">
-    <div v-if="sidebarStore.sidebarSize < 1" class="toggle-button-wrapper">
-      <el-icon
-        style="cursor: pointer"
-        title="打开笔记列表"
-        @click="sidebarStore.openSidebar()"
-      >
-        <Expand />
-      </el-icon>
-    </div>
-    <div class="panel-content">
-      <div
-        class="panel-title panel-title-editor"
-        :class="{ 'title-active': sidebarStore.sidebarSize < 1 }"
-      >
-        <h3>编辑区</h3>
+  <Splitpanes>
+    <pane min-size="30" size="40">
+      <div v-if="sidebarStore.sidebarSize < 1" class="toggle-button-wrapper">
+        <el-icon
+          style="cursor: pointer"
+          title="打开笔记列表"
+          @click="sidebarStore.openSidebar()"
+        >
+          <Expand />
+        </el-icon>
       </div>
-      <NoteEditor
-        ref="noteEditorRef"
-        v-model="noteContent"
-        :current-note="currentNote"
-      />
-    </div>
-  </el-splitter-panel>
-
-  <el-splitter-panel min="30%">
-    <div class="panel-content">
-      <div class="panel-title panel-title-preview">
-        <h3>预览区</h3>
-        <img
-          class="md-export-btn"
-          src="../../../public/Markdown-mark.svg"
-          title="导出为markdown"
-          alt="md"
-          @click="downloadMarkdown"
+      <div class="panel-content">
+        <div
+          class="panel-title panel-title-editor"
+          :class="{ 'title-active': sidebarStore.sidebarSize < 1 }"
+        >
+          <h3>编辑区</h3>
+        </div>
+        <NoteEditor
+          ref="noteEditorRef"
+          v-model="noteContent"
+          :current-note="currentNote"
         />
       </div>
-      <NotePreview :content="noteContent" />
-    </div>
-  </el-splitter-panel>
+    </pane>
+
+    <pane min-size="30" size="40">
+      <div class="panel-content">
+        <div class="panel-title panel-title-preview">
+          <h3>预览区</h3>
+          <img
+            class="md-export-btn"
+            src="../../../public/Markdown-mark.svg"
+            title="导出为markdown"
+            alt="md"
+            @click="downloadMarkdown"
+          />
+        </div>
+        <NotePreview :content="noteContent" />
+      </div>
+    </pane>
+  </Splitpanes>
 </template>
 
 <style scoped lang="scss">
+:deep(.splitpanes__splitter) {
+  background-color: #f5f7f6;
+  width: 2px;
+}
 .panel-content {
   display: flex;
   flex-direction: column;
-  width: 100%;
   height: 100%;
-
   .panel-title {
     display: flex;
     justify-content: space-between;
@@ -178,13 +184,6 @@ const downloadMarkdown = () => {
   top: 18px;
   :deep(.el-icon):hover {
     background-color: #fafafa;
-  }
-}
-:deep(.el-splitter-bar__dragger) {
-  display: none;
-  background-color: #fff;
-  &::before {
-    background-color: #fff;
   }
 }
 </style>

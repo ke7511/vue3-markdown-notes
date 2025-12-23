@@ -11,18 +11,14 @@ const handleResizeEnd = () => {
 
 <template>
   <div class="app-container">
-    <el-splitter @resize-end="handleResizeEnd">
-      <Sidebar ref="childNoteList"></Sidebar>
-      <router-view
-        @editor-size="(val: number) => (editorSize = val)"
-      ></router-view>
-    </el-splitter>
+    <Sidebar></Sidebar>
+    <router-view></router-view>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .app-container {
-  --el-border-color-light: #f5f7f6;
+  display: flex;
   height: 100vh;
   width: 100vw;
 }

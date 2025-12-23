@@ -55,12 +55,7 @@ const handleNavigate = (id: string) => {
 }
 </script>
 <template>
-  <el-splitter-panel
-    v-if="isSidebarVisible"
-    v-model:size="sidebarSize"
-    min="8%"
-    max="25%"
-  >
+  <div v-if="isSidebarVisible" class="sidebar">
     <div class="panel-list">
       <!-- NoteList -->
       <SidebarHeader @create-note="handleCreateNote" />
@@ -76,28 +71,30 @@ const handleNavigate = (id: string) => {
         />
       </div>
     </div>
-  </el-splitter-panel>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-:deep(.el-splitter-panel) {
-  position: relative;
-  box-sizing: border-box;
-}
-.panel-list {
-  width: 100%;
+.sidebar {
+  width: 20%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #f5f7f6;
+  .panel-list {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f7f6;
 
-  .note-content {
-    scrollbar-width: thin;
-    scrollbar-color: #a8a8a8 #f5f7f6;
-    flex: 1;
-    box-sizing: border-box;
-    overflow-y: auto;
-    padding: 10px 10px 0;
+    .note-content {
+      scrollbar-width: thin;
+      scrollbar-color: #a8a8a8 #f5f7f6;
+      flex: 1;
+      box-sizing: border-box;
+      overflow-y: auto;
+      padding: 10px 10px 0;
+    }
   }
 }
 </style>
