@@ -69,10 +69,10 @@ export const useSidebarStore = defineStore(
           isMobileOpen.value = false
         }
 
-        // 下一帧恢复过渡动画
-        requestAnimationFrame(() => {
+        // 延后恢复过渡动画，确保模式切换完成
+        setTimeout(() => {
           isTransitioning.value = false
-        })
+        }, 50)
       }
     }
 
