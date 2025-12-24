@@ -5,8 +5,10 @@ import { ref, nextTick } from 'vue'
 import dayjs from 'dayjs'
 import { useNoteStore } from '@/stores/note'
 import { useRoute, useRouter } from 'vue-router'
+import { useSidebarStore } from '@/stores/sidebar'
 
 const noteStore = useNoteStore()
+const sidebarStore = useSidebarStore()
 
 // Props
 defineProps<{
@@ -62,6 +64,10 @@ function deleteNote(noteId: string) {
 // 跳转到笔记
 function navigateToNote(noteId: string) {
   router.push(`/${noteId}`)
+  // 移动模式切换笔记后关闭抽屉
+  if (sidebarStore.isMobile) {
+    sidebarStore.closeSidebar()
+  }
 }
 </script>
 
