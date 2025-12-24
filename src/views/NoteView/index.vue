@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onMounted, watch, ref } from 'vue'
+import { onMounted, watch, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { Expand } from '@element-plus/icons-vue'
+import { Menu } from '@element-plus/icons-vue'
+import { storeToRefs } from 'pinia'
 import NoteEditor from './modules/NoteEditor.vue'
 import NotePreview from './modules/NotePreview.vue'
 import { useNoteLoader } from '@/composables/useNoteLoader'
@@ -12,24 +13,10 @@ import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 
 const sidebarStore = useSidebarStore()
+const { isMobile, isMobileOpen } = storeToRefs(sidebarStore)
 
-// 延迟显示按钮（等侧边栏动画结束）
-const showToggleButton = ref(false)
-watch(
-  () => sidebarStore.isSidebarVisible,
-  (visible) => {
-    if (visible) {
-      // 侧边栏打开时，立即隐藏按钮
-      showToggleButton.value = false
-    } else {
-      // 侧边栏关闭时，延迟 300ms 再显示按钮
-      setTimeout(() => {
-        showToggleButton.value = true
-      }, 300)
-    }
-  },
-  { immediate: true }
-)
+// 移动端：显示菜单按钮打开抽屉
+const showMenuButton = computed(() => isMobile.value && !isMobileOpen.value)
 
 const route = useRoute()
 const { currentNote, noteContent, loadNote } = useNoteLoader()
@@ -82,19 +69,20 @@ const downloadMarkdown = () => {
 <template>
   <Splitpanes @resized="storePaneSize">
     <pane min-size="30" :size="paneSize">
-      <div v-show="showToggleButton" class="toggle-button-wrapper">
+      <!-- 移动端菜单按钮 -->
+      <div v-show="showMenuButton" class="toggle-button-wrapper">
         <el-icon
           style="cursor: pointer"
           title="打开笔记列表"
           @click="sidebarStore.openSidebar()"
         >
-          <Expand />
+          <Menu />
         </el-icon>
       </div>
       <div class="panel-content">
         <div
           class="panel-title panel-title-editor"
-          :class="{ 'title-active': !sidebarStore.isSidebarVisible }"
+          :class="{ 'title-active': showMenuButton }"
         >
           <h3>编辑区</h3>
         </div>
@@ -194,7 +182,6 @@ const downloadMarkdown = () => {
 
   .title-active {
     padding-left: 20px;
-    transition: all 0.5s;
   }
 
   h3 {
