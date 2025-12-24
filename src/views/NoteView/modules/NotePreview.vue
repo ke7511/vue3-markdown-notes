@@ -33,7 +33,7 @@ watch(
       throttledContent.value = newValue
     },
     200,
-    // { leading: true, trailing: true } 保证第一次输入和最后一次输入都会触发更新，体验最好
+    // { leading: true, trailing: true } 保证第一次输入和最后一次输入都会触发更新
     { leading: true, trailing: true }
   )
 )

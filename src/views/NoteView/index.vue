@@ -80,10 +80,7 @@ const downloadMarkdown = () => {
         </el-icon>
       </div>
       <div class="panel-content">
-        <div
-          class="panel-title panel-title-editor"
-          :class="{ 'title-active': showMenuButton }"
-        >
+        <div class="panel-title" :class="{ 'title-active': showMenuButton }">
           <h3>编辑区</h3>
         </div>
         <NoteEditor
@@ -96,7 +93,7 @@ const downloadMarkdown = () => {
 
     <pane min-size="30" :size="100 - paneSize">
       <div class="panel-content">
-        <div class="panel-title panel-title-preview">
+        <div class="panel-title">
           <h3>预览区</h3>
           <img
             class="md-export-btn"
@@ -120,6 +117,7 @@ const downloadMarkdown = () => {
 
   // 扩大触发区域的透明伪元素
   &::before {
+    z-index: 11;
     content: '';
     position: absolute;
     top: 0;
@@ -154,30 +152,6 @@ const downloadMarkdown = () => {
         transform: scale(0.95);
       }
     }
-  }
-
-  .panel-title-editor::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 1px;
-    background-color: #dddfe5;
-    transform: scaleX(0.5);
-    transform-origin: right;
-  }
-
-  .panel-title-preview::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 1px;
-    background-color: #dddfe5;
-    transform: scaleX(0.5);
-    transform-origin: left;
   }
 
   .title-active {
