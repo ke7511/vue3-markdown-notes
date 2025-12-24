@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { Edit, Delete } from '@element-plus/icons-vue'
-import { ElInput } from 'element-plus'
+import { ElInput, ElMessage, ElMessageBox } from 'element-plus'
 import { ref, nextTick } from 'vue'
 import dayjs from 'dayjs'
+import { useNoteStore } from '@/stores/note'
+import { useRoute, useRouter } from 'vue-router'
+
+const noteStore = useNoteStore()
 
 // Props
 defineProps<{
@@ -14,27 +18,50 @@ defineProps<{
   active: boolean
 }>()
 
-// Emits
-const emit = defineEmits(['edit', 'delete', 'navigate'])
-
 // 编辑状态
 const editingNoteId = ref<string | null>(null)
 const editingTitle = ref('')
 const editingRef = ref<InstanceType<typeof ElInput> | null>(null)
 
 // 开始编辑
-const startEditing = (noteId: string, currentTitle: string) => {
+function startEditing(noteId: string, currentTitle: string) {
   editingNoteId.value = noteId
   editingTitle.value = currentTitle
   nextTick(() => editingRef.value?.focus())
 }
 
 // 结束编辑
-const endEditing = () => {
+function endEditing() {
   if (editingNoteId.value && editingTitle.value.trim() !== '') {
-    emit('edit', editingNoteId.value, editingTitle.value.trim())
+    noteStore.updateNoteTitle(editingNoteId.value, editingTitle.value.trim())
   }
   editingNoteId.value = null
+}
+
+// 删除笔记
+const route = useRoute()
+const router = useRouter()
+function deleteNote(noteId: string) {
+  ElMessageBox.confirm('您确定要删除这篇笔记吗？此操作不可撤销。', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    await noteStore.deleteNote(noteId)
+    if (route.params.noteId === noteId) {
+      if (noteStore.noteList.length > 0) {
+        router.push(`/${noteStore.noteList[0].id}`)
+      } else {
+        router.push('/')
+      }
+    }
+    ElMessage.success('删除成功')
+  })
+}
+
+// 跳转到笔记
+function navigateToNote(noteId: string) {
+  router.push(`/${noteId}`)
 }
 </script>
 
@@ -42,7 +69,7 @@ const endEditing = () => {
   <div
     class="note-item"
     :class="{ 'is-active': active }"
-    @click="emit('navigate', note.id)"
+    @click="navigateToNote(note.id)"
   >
     <!-- 标题部分 -->
     <div class="note-up">
@@ -84,7 +111,7 @@ const endEditing = () => {
         circle
         size="small"
         title="删除笔记"
-        @click.stop="emit('delete', note.id)"
+        @click.stop="deleteNote(note.id)"
       />
     </div>
   </div>

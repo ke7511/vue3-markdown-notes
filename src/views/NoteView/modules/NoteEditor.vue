@@ -8,7 +8,6 @@ import { useNoteStore } from '@/stores/note'
 const props = defineProps<{
   currentNote: NoteType | null
 }>()
-const emit = defineEmits(['update:noteContent'])
 
 const noteStore = useNoteStore()
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
