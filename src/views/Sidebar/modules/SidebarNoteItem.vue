@@ -2,6 +2,7 @@
 import { Edit, Delete } from '@element-plus/icons-vue'
 import { ElInput } from 'element-plus'
 import { ref, nextTick } from 'vue'
+import dayjs from 'dayjs'
 
 // Props
 defineProps<{
@@ -74,7 +75,7 @@ const endEditing = () => {
     <!-- 日期及删除 -->
     <div class="note-under">
       <div class="note-date">
-        {{ new Date(note.createdTime).toLocaleDateString() }}
+        {{ dayjs(note.createdTime).format('YYYY-MM-DD') }}
       </div>
       <el-button
         class="delete-button"

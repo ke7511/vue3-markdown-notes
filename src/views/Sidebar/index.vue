@@ -6,24 +6,10 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { useSidebarStore } from '@/stores/sidebar'
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
-import { useWindowSize } from '@vueuse/core'
-
 const noteStore = useNoteStore()
+const { isSidebarVisible } = storeToRefs(useSidebarStore())
 const route = useRoute()
 const router = useRouter()
-
-const { sidebarSize } = storeToRefs(useSidebarStore())
-const { width } = useWindowSize()
-const isSidebarVisible = computed(
-  () => sidebarSize.value > 0 && width.value > 850
-)
-
-// 新建笔记
-const handleCreateNote = async () => {
-  const newNoteId = await noteStore.createNote()
-  router.push(`/${newNoteId}`)
-}
 
 // 编辑标题
 const handleEdit = (id: string, title: string) => {
@@ -55,46 +41,46 @@ const handleNavigate = (id: string) => {
 }
 </script>
 <template>
-  <div v-if="isSidebarVisible" class="sidebar">
-    <div class="panel-list">
-      <!-- NoteList -->
-      <SidebarHeader @create-note="handleCreateNote" />
-      <div class="note-content">
-        <NoteItem
-          v-for="note in noteStore.noteList"
-          :key="note.id"
-          :note="note"
-          :active="note.id === $route.params.noteId"
-          @edit="handleEdit"
-          @delete="handleDelete"
-          @navigate="handleNavigate"
-        />
-      </div>
+  <aside class="panel-list" :class="{ collapsed: !isSidebarVisible }">
+    <!-- NoteList -->
+    <SidebarHeader />
+    <div class="note-content">
+      <NoteItem
+        v-for="note in noteStore.noteList"
+        :key="note.id"
+        :note="note"
+        :active="note.id === $route.params.noteId"
+        @edit="handleEdit"
+        @delete="handleDelete"
+        @navigate="handleNavigate"
+      />
     </div>
-  </div>
+  </aside>
 </template>
 
 <style lang="scss" scoped>
-.sidebar {
-  width: 20%;
+.panel-list {
+  width: 240px;
   height: 100%;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  .panel-list {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    background-color: #f5f7f6;
+  background-color: #f5f7f6;
+  overflow: hidden;
+  transition: width 0.3s ease;
 
-    .note-content {
-      scrollbar-width: thin;
-      scrollbar-color: #a8a8a8 #f5f7f6;
-      flex: 1;
-      box-sizing: border-box;
-      overflow-y: auto;
-      padding: 10px 10px 0;
-    }
+  // 收起状态
+  &.collapsed {
+    width: 0;
+  }
+
+  .note-content {
+    scrollbar-width: thin;
+    scrollbar-color: #a8a8a8 #f5f7f6;
+    flex: 1;
+    box-sizing: border-box;
+    overflow-y: auto;
+    padding: 10px 10px 0;
   }
 }
 </style>

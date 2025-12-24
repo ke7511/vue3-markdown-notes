@@ -1,30 +1,50 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+// 响应式断点：当窗口宽度小于此值时自动隐藏侧边栏
+const MOBILE_BREAKPOINT = 768
+
 export const useSidebarStore = defineStore(
   'sidebar',
   () => {
     // 笔记列表宽度
-    const sidebarSize = ref(180)
-
-    // 关闭笔记列表前的宽度，使笔记列表在打开时保持上次关闭时的宽度
-    const lastSidebarSize = ref(180)
+    const isSidebarVisible = ref(true)
 
     // 点击开启笔记列表
-    const openSidebar = () => {
-      sidebarSize.value = lastSidebarSize.value
+    function openSidebar() {
+      isSidebarVisible.value = true
     }
+
     // 点击关闭笔记列表
-    const closeSidebar = () => {
-      lastSidebarSize.value = sidebarSize.value
-      sidebarSize.value = 0
+    function closeSidebar() {
+      isSidebarVisible.value = false
+    }
+
+    // 根据窗口宽度自动调整侧边栏显示状态
+    function handleResize() {
+      if (window.innerWidth < MOBILE_BREAKPOINT) {
+        isSidebarVisible.value = false
+      }
+    }
+
+    // 初始化监听器
+    function initResizeListener() {
+      // 初始检查一次
+      handleResize()
+      window.addEventListener('resize', handleResize)
+    }
+
+    // 清理监听器
+    function destroyResizeListener() {
+      window.removeEventListener('resize', handleResize)
     }
 
     return {
-      sidebarSize,
-      lastSidebarSize,
+      isSidebarVisible,
       openSidebar,
-      closeSidebar
+      closeSidebar,
+      initResizeListener,
+      destroyResizeListener
     }
   },
   {

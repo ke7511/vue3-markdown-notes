@@ -12,7 +12,24 @@ import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 
 const sidebarStore = useSidebarStore()
-const emits = defineEmits(['editor-size'])
+
+// 延迟显示按钮（等侧边栏动画结束）
+const showToggleButton = ref(false)
+watch(
+  () => sidebarStore.isSidebarVisible,
+  (visible) => {
+    if (visible) {
+      // 侧边栏打开时，立即隐藏按钮
+      showToggleButton.value = false
+    } else {
+      // 侧边栏关闭时，延迟 300ms 再显示按钮
+      setTimeout(() => {
+        showToggleButton.value = true
+      }, 300)
+    }
+  },
+  { immediate: true }
+)
 
 const route = useRoute()
 const { currentNote, noteContent, loadNote } = useNoteLoader()
@@ -47,15 +64,12 @@ watch(
   }
 )
 
-// 编辑区大小（持久化到 localStorage）
-const editorSize = ref(Number(localStorage.getItem('editor-size')) || 650)
-onMounted(() => {
-  emits('editor-size', editorSize.value)
-})
-watch(editorSize, (val) => {
-  emits('editor-size', val)
-  localStorage.setItem('editor-size', String(val))
-})
+// 持久化编辑和预览区大小
+const paneSize = ref(Number(localStorage.getItem('paneSize')) || 50)
+function storePaneSize({ prevPane }: { prevPane: { size: number } }) {
+  paneSize.value = prevPane.size
+  localStorage.setItem('paneSize', String(prevPane.size))
+}
 
 // 导出为markdown
 const downloadMarkdown = () => {
@@ -66,9 +80,9 @@ const downloadMarkdown = () => {
 </script>
 
 <template>
-  <Splitpanes>
-    <pane min-size="30" size="40">
-      <div v-if="sidebarStore.sidebarSize < 1" class="toggle-button-wrapper">
+  <Splitpanes @resized="storePaneSize">
+    <pane min-size="30" :size="paneSize">
+      <div v-show="showToggleButton" class="toggle-button-wrapper">
         <el-icon
           style="cursor: pointer"
           title="打开笔记列表"
@@ -80,7 +94,7 @@ const downloadMarkdown = () => {
       <div class="panel-content">
         <div
           class="panel-title panel-title-editor"
-          :class="{ 'title-active': sidebarStore.sidebarSize < 1 }"
+          :class="{ 'title-active': !sidebarStore.isSidebarVisible }"
         >
           <h3>编辑区</h3>
         </div>
@@ -92,7 +106,7 @@ const downloadMarkdown = () => {
       </div>
     </pane>
 
-    <pane min-size="30" size="40">
+    <pane min-size="30" :size="100 - paneSize">
       <div class="panel-content">
         <div class="panel-title panel-title-preview">
           <h3>预览区</h3>
@@ -194,8 +208,21 @@ const downloadMarkdown = () => {
   position: absolute;
   left: 0;
   top: 18px;
+  // 淡入动画
+  animation: fadeIn 0.3s ease;
   :deep(.el-icon):hover {
     background-color: #fafafa;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 </style>

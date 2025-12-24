@@ -1,13 +1,10 @@
 <script setup lang="ts">
+import { useNoteStore } from '@/stores/note'
 import { useSidebarStore } from '@/stores/sidebar'
 import { Close, Plus } from '@element-plus/icons-vue'
 
-const sidebarStore = useSidebarStore()
-// Emits
-const emit = defineEmits(['close-sidebar', 'create-note'])
-
-// 新建笔记
-const handleCreateNote = () => emit('create-note')
+const { closeSidebar } = useSidebarStore()
+const { createNote } = useNoteStore()
 </script>
 
 <template>
@@ -17,22 +14,20 @@ const handleCreateNote = () => emit('create-note')
       <h3>笔记列表</h3>
       <!-- 新建按钮 -->
       <el-button
-        v-if="sidebarStore.sidebarSize > 153"
         :icon="Plus"
         text
         circle
         title="新建笔记"
-        @click="handleCreateNote"
+        @click="createNote"
       />
     </div>
     <!-- 关闭按钮 -->
     <el-button
-      v-if="sidebarStore.sidebarSize > 129"
       :icon="Close"
       text
       circle
-      title="关闭笔迹列表"
-      @click="sidebarStore.closeSidebar()"
+      title="关闭笔记列表"
+      @click="closeSidebar"
     />
   </div>
 </template>
