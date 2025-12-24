@@ -119,7 +119,7 @@ function navigateToNote(noteId: string) {
 
 <style lang="scss" scoped>
 .note-item {
-  background-color: #fafafa;
+  background-color: var(--bg-color-light);
   display: block;
   padding: 10px 12px;
   border-radius: 6px;
@@ -133,8 +133,8 @@ function navigateToNote(noteId: string) {
     transform 0.15s ease;
 
   &:hover {
-    background-color: #e8f2ff;
-    color: #1677ff;
+    background-color: var(--primary-color-light);
+    color: var(--primary-color);
 
     :deep(.delete-button) {
       opacity: 1;
@@ -142,10 +142,10 @@ function navigateToNote(noteId: string) {
   }
 
   &.is-active {
-    background-color: #dceeff;
-    color: #1677ff;
+    background-color: var(--primary-color-lighter);
+    color: var(--primary-color);
     font-weight: 600;
-    border-left-color: #1677ff;
+    border-left-color: var(--primary-color);
     box-shadow: 0 2px 8px rgba(22, 119, 255, 0.15);
   }
 

@@ -44,7 +44,7 @@ $sidebar-collapsed-width: 60px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  background-color: #f5f7f6;
+  background-color: var(--bg-color);
   overflow: hidden;
 
   // 桌面端展开状态
@@ -81,7 +81,7 @@ $sidebar-collapsed-width: 60px;
 
   .note-content {
     scrollbar-width: thin;
-    scrollbar-color: #a8a8a8 #f5f7f6;
+    scrollbar-color: #a8a8a8 var(--bg-color);
     flex: 1;
     box-sizing: border-box;
     overflow-y: auto;

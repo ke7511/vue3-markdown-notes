@@ -1,0 +1,26 @@
+// ===================
+// 主题色配置
+// ===================
+
+// 主色（蓝色系）
+$primary-color: #1677ff;
+$primary-color-light: #e8f2ff;    // 悬停背景
+$primary-color-lighter: #dceeff;  // 选中背景
+
+// 背景色
+$bg-color: #f5f7f6;       // 侧边栏/代码块背景
+$bg-color-light: #fafafa; // 笔记项背景
+
+// ===================
+// CSS 变量
+// ===================
+:root {
+  // 主色
+  --primary-color: #{$primary-color};
+  --primary-color-light: #{$primary-color-light};
+  --primary-color-lighter: #{$primary-color-lighter};
+
+  // 背景色
+  --bg-color: #{$bg-color};
+  --bg-color-light: #{$bg-color-light};
+}

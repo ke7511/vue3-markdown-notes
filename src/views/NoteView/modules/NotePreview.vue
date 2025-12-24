@@ -85,7 +85,7 @@ watch(throttledContent, () => {
 
   // 代码块
   :deep(.hljs) {
-    background-color: #f5f7f6;
+    background-color: var(--bg-color);
     border-radius: 7px;
     padding: 10px;
     white-space: pre-wrap;
@@ -95,7 +95,7 @@ watch(throttledContent, () => {
 
   // 行内代码
   :deep(p > code) {
-    background: #f5f7f6;
+    background: var(--bg-color);
     border-radius: 4px;
     padding: 5px;
   }

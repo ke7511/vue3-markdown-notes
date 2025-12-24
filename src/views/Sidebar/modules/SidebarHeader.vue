@@ -55,7 +55,7 @@ const { createNote } = useNoteStore()
 .sidebar-header {
   height: 32px;
   padding: 10px 10px;
-  background-color: #f5f7f6;
+  background-color: var(--bg-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -63,7 +63,7 @@ const { createNote } = useNoteStore()
   transition: padding 0.3s ease;
 
   :deep(.el-button):hover {
-    background-color: #fafafa;
+    background-color: var(--bg-color-light);
   }
 
   .note-create {
