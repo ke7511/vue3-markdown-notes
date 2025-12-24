@@ -125,7 +125,12 @@ function navigateToNote(noteId: string) {
   border-radius: 6px;
   cursor: pointer;
   margin-bottom: 5px;
-  transition: background-color 0.2s;
+  border-left: 3px solid transparent;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.15s ease;
 
   &:hover {
     background-color: #e8f2ff;
@@ -140,6 +145,8 @@ function navigateToNote(noteId: string) {
     background-color: #dceeff;
     color: #1677ff;
     font-weight: 600;
+    border-left-color: #1677ff;
+    box-shadow: 0 2px 8px rgba(22, 119, 255, 0.15);
   }
 
   .note-up {
