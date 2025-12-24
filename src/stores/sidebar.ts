@@ -16,6 +16,9 @@ export const useSidebarStore = defineStore(
     // 移动端：抽屉是否打开
     const isMobileOpen = ref(false)
 
+    // 是否正在切换模式（用于禁用过渡动画）
+    const isTransitioning = ref(false)
+
     // 判断侧边栏是否可见
     const isSidebarVisible = computed(() => {
       if (isMobile.value) {
@@ -54,11 +57,22 @@ export const useSidebarStore = defineStore(
     // 根据窗口宽度自动调整模式
     function handleResize() {
       const wasMobile = isMobile.value
-      isMobile.value = window.innerWidth < MOBILE_BREAKPOINT
+      const newIsMobile = window.innerWidth < MOBILE_BREAKPOINT
 
-      // 从桌面切换到移动端时，关闭抽屉
-      if (!wasMobile && isMobile.value) {
-        isMobileOpen.value = false
+      // 如果模式发生变化，临时禁用过渡动画
+      if (wasMobile !== newIsMobile) {
+        isTransitioning.value = true
+        isMobile.value = newIsMobile
+
+        // 从桌面切换到移动端时，关闭抽屉
+        if (!wasMobile && newIsMobile) {
+          isMobileOpen.value = false
+        }
+
+        // 下一帧恢复过渡动画
+        requestAnimationFrame(() => {
+          isTransitioning.value = false
+        })
       }
     }
 
@@ -77,6 +91,7 @@ export const useSidebarStore = defineStore(
       isMobile,
       isCollapsed,
       isMobileOpen,
+      isTransitioning,
       isSidebarVisible,
       toggleSidebar,
       openSidebar,

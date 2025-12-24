@@ -7,7 +7,8 @@ import { storeToRefs } from 'pinia'
 
 const noteStore = useNoteStore()
 const sidebarStore = useSidebarStore()
-const { isMobile, isCollapsed, isMobileOpen } = storeToRefs(sidebarStore)
+const { isMobile, isCollapsed, isMobileOpen, isTransitioning } =
+  storeToRefs(sidebarStore)
 </script>
 
 <template>
@@ -17,7 +18,8 @@ const { isMobile, isCollapsed, isMobileOpen } = storeToRefs(sidebarStore)
       'desktop-expanded': !isMobile && !isCollapsed,
       'desktop-collapsed': !isMobile && isCollapsed,
       'mobile-mode': isMobile,
-      'mobile-open': isMobile && isMobileOpen
+      'mobile-open': isMobile && isMobileOpen,
+      'no-transition': isTransitioning
     }"
   >
     <!-- NoteList -->
@@ -72,6 +74,9 @@ $sidebar-collapsed-width: 60px;
     z-index: 1000;
     transform: translateX(-100%);
     box-shadow: none;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
 
     &.mobile-open {
       transform: translateX(0);
@@ -87,6 +92,11 @@ $sidebar-collapsed-width: 60px;
     overflow-y: auto;
     padding: 10px 10px 0;
     transition: opacity 0.2s ease;
+  }
+
+  // 模式切换时禁用过渡动画
+  &.no-transition {
+    transition: none !important;
   }
 }
 </style>
