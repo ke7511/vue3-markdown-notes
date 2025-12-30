@@ -30,6 +30,19 @@ export const useThemeStore = defineStore(
       } else {
         html.classList.remove('dark')
       }
+
+      // 动态切换 highlight.js 主题
+      const hljsLinkId = 'hljs-theme'
+      let link = document.getElementById(hljsLinkId) as HTMLLinkElement | null
+      if (!link) {
+        link = document.createElement('link')
+        link.id = hljsLinkId
+        link.rel = 'stylesheet'
+        document.head.appendChild(link)
+      }
+      // 根据主题切换不同的 CSS 文件
+      const themeName = currentTheme.value === 'dark' ? 'github-dark' : 'github'
+      link.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${themeName}.min.css`
     }
 
     // 切换主题
