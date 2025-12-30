@@ -159,7 +159,7 @@ const downloadMarkdown = () => {
     .panel-modules {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
     }
   }
 

@@ -8,17 +8,14 @@ const { currentTheme } = storeToRefs(themeStore)
 </script>
 
 <template>
-  <el-button
-    text
-    circle
-    :title="currentTheme === 'dark' ? '切换到亮色模式' : '切换到暗色模式'"
-    @click="themeStore.toggleTheme()"
-  >
-    <el-icon>
-      <Sunny v-if="currentTheme === 'dark'" />
-      <Moon v-else />
-    </el-icon>
-  </el-button>
+  <el-switch
+    :model-value="currentTheme"
+    :active-action-icon="Sunny"
+    :inactive-action-icon="Moon"
+    active-value="light"
+    inactive-value="dark"
+    @change="themeStore.toggleTheme"
+  />
 </template>
 
 <style scoped lang="scss"></style>
