@@ -10,10 +10,11 @@ const { currentTheme } = storeToRefs(themeStore)
 <template>
   <el-switch
     :model-value="currentTheme"
-    :active-action-icon="Sunny"
-    :inactive-action-icon="Moon"
-    active-value="light"
-    inactive-value="dark"
+    :active-action-icon="Moon"
+    :inactive-action-icon="Sunny"
+    active-value="dark"
+    inactive-value="light"
+    style="--el-switch-on-color: var(--title-color-bg)"
     @change="themeStore.toggleTheme"
   />
 </template>
