@@ -6,10 +6,9 @@ import { storeToRefs } from 'pinia'
 import NoteEditor from './modules/NoteEditor.vue'
 import NotePreview from './modules/NotePreview.vue'
 import ThemeToggle from './modules/ThemeToggle.vue'
+import MarkdownExport from './modules/MarkdownExport.vue'
 import { useNoteLoader } from '@/composables/useNoteLoader'
 import { useSidebarStore } from '@/stores/sidebar'
-import { saveAs } from 'file-saver'
-import { ElMessage } from 'element-plus'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 
@@ -58,13 +57,6 @@ function storePaneSize({ prevPane }: { prevPane: { size: number } }) {
   paneSize.value = prevPane.size
   localStorage.setItem('paneSize', String(prevPane.size))
 }
-
-// 导出为markdown
-const downloadMarkdown = () => {
-  const blob = new Blob([noteContent.value], { type: 'text/markdown' })
-  saveAs(blob, `${currentNote.value?.title}.md`)
-  ElMessage.success('导出成功')
-}
 </script>
 
 <template>
@@ -98,12 +90,9 @@ const downloadMarkdown = () => {
           <h3>预览区</h3>
           <div class="panel-modules">
             <ThemeToggle />
-            <img
-              class="md-export-btn"
-              src="../../../public/Markdown-mark.svg"
-              title="导出为markdown"
-              alt="md"
-              @click="downloadMarkdown"
+            <MarkdownExport
+              :note-content="noteContent"
+              :current-note="currentNote"
             />
           </div>
         </div>
@@ -143,23 +132,11 @@ const downloadMarkdown = () => {
     padding: 10px;
     border-bottom: 1px solid var(--divider-color);
     z-index: 10;
-    .md-export-btn {
-      height: 20px;
-      width: auto;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      &:hover {
-        transform: scale(1.2);
-        filter: brightness(0.8);
-      }
-      &:active {
-        transform: scale(0.95);
-      }
-    }
+
     .panel-modules {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 20px;
     }
   }
 
