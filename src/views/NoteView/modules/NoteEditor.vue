@@ -161,7 +161,7 @@ const handleTab = (e: KeyboardEvent) => {
     display: block;
     box-sizing: border-box;
     scrollbar-width: thin;
-    scrollbar-color: #a8a8a8 #fff;
+    scrollbar-color: var(--scrollbar-color);
     width: 100%;
     height: 100%;
     padding: 10px 20px 15px;
@@ -172,6 +172,8 @@ const handleTab = (e: KeyboardEvent) => {
     word-break: break-word;
     font-size: 16px;
     line-height: 1.5;
+    background-color: var(--page-bg);
+    color: var(--text-color);
   }
 }
 .placeholder {

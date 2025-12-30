@@ -5,6 +5,8 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import router from './router'
 import 'normalize.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
+import 'highlight.js/styles/github.css'
 import '@/styles/variables.scss'
 
 const app = createApp(App)

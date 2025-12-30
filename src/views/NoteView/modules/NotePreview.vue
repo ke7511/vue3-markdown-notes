@@ -3,7 +3,6 @@ import { computed, nextTick, ref, watch } from 'vue'
 import DOMPurify from 'dompurify'
 import markdownit from 'markdown-it'
 import hljs from 'highlight.js/lib/common'
-import 'highlight.js/styles/github.css'
 import { addCopyButton } from '@/utils/copyButton'
 import { throttle } from 'lodash-es'
 
@@ -69,12 +68,11 @@ watch(throttledContent, () => {
   overflow-wrap: break-word;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #a8a8a8 #fff;
+  scrollbar-color: var(--scrollbar-color);
   line-height: 1.5;
 
   :deep(h1) {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--divider-color);
   }
 
   :deep(img) {
@@ -114,7 +112,7 @@ watch(throttledContent, () => {
     top: 8px;
     right: 8px;
     padding: 4px 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--copy-button-border-color);
     border-radius: 4px;
     width: auto;
     min-width: 32px;
@@ -152,12 +150,12 @@ watch(throttledContent, () => {
   }
 
   :deep(.copy-button:not(.copied):hover) {
-    background-color: #fefafa;
+    background-color: var(--copy-button-color);
   }
 
   /* 复制成功后的状态，现在只改变背景色 */
   :deep(.copy-button.copied) {
-    background-color: #fefafa;
+    background-color: var(--copy-button-color);
   }
 }
 </style>

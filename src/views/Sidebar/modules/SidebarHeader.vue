@@ -63,7 +63,7 @@ const { createNote } = useNoteStore()
   transition: padding 0.3s ease;
 
   :deep(.el-button):hover {
-    background-color: var(--bg-color-light);
+    background-color: var(--title-color-bg);
   }
 
   .note-create {

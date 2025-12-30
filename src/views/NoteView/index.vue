@@ -5,6 +5,7 @@ import { Menu } from '@element-plus/icons-vue'
 import { storeToRefs } from 'pinia'
 import NoteEditor from './modules/NoteEditor.vue'
 import NotePreview from './modules/NotePreview.vue'
+import ThemeToggle from './modules/ThemeToggle.vue'
 import { useNoteLoader } from '@/composables/useNoteLoader'
 import { useSidebarStore } from '@/stores/sidebar'
 import { saveAs } from 'file-saver'
@@ -95,13 +96,16 @@ const downloadMarkdown = () => {
       <div class="panel-content">
         <div class="panel-title">
           <h3>预览区</h3>
-          <img
-            class="md-export-btn"
-            src="../../../public/Markdown-mark.svg"
-            title="导出为markdown"
-            alt="md"
-            @click="downloadMarkdown"
-          />
+          <div class="panel-modules">
+            <ThemeToggle />
+            <img
+              class="md-export-btn"
+              src="../../../public/Markdown-mark.svg"
+              title="导出为markdown"
+              alt="md"
+              @click="downloadMarkdown"
+            />
+          </div>
         </div>
         <NotePreview :content="noteContent" />
       </div>
@@ -111,7 +115,7 @@ const downloadMarkdown = () => {
 
 <style scoped lang="scss">
 :deep(.splitpanes__splitter) {
-  background-color: #dddfe4;
+  background-color: var(--divider-color);
   width: 1px;
   position: relative;
 
@@ -137,7 +141,7 @@ const downloadMarkdown = () => {
     position: relative;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #dddfe5;
+    border-bottom: 1px solid var(--divider-color);
     z-index: 10;
     .md-export-btn {
       height: 20px;
@@ -151,6 +155,11 @@ const downloadMarkdown = () => {
       &:active {
         transform: scale(0.95);
       }
+    }
+    .panel-modules {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
   }
 

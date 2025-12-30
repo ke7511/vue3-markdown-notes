@@ -1,26 +1,100 @@
-// ===================
-// 主题色配置
-// ===================
-
-// 主色（蓝色系）
-$primary-color: #1677ff;
-$primary-color-light: #e8f2ff;    // 悬停背景
-$primary-color-lighter: #dceeff;  // 选中背景
-
-// 背景色
-$bg-color: #f5f7f6;       // 侧边栏/代码块背景
-$bg-color-light: #fafafa; // 笔记项背景
-
-// ===================
-// CSS 变量
-// ===================
+// 亮色主题
 :root {
-  // 主色
-  --primary-color: #{$primary-color};
-  --primary-color-light: #{$primary-color-light};
-  --primary-color-lighter: #{$primary-color-lighter};
+  // 笔记标题颜色
+  --title-color-shadow: #1677ff;
+  --title-color-hover: #e8f2ff;
+  --title-color-active: #dceeff;
+  --title-color-bg: #fdfdfd;
 
-  // 背景色
-  --bg-color: #{$bg-color};
-  --bg-color-light: #{$bg-color-light};
+  // 笔记列表和代码块背景
+  --bg-color: #f5f7f6;
+
+  // 全局文字和背景
+  --text-color: #303133;
+  --text-color-secondary: #909399;
+  --page-bg: #ffffff;
+
+  // 滚动条
+  --scrollbar-color: #a8a8a8 #fff;
+
+  // 分割线
+  --divider-color: #E7E7E7;
+
+  // 复制按钮
+  --copy-button-color: #fefafa;
+  --copy-button-border-color: #eee;
+}
+
+// 暗色主题
+[data-theme="dark"] {
+  // 笔记标题颜色
+  --title-color-shadow: #409eff;
+  --title-color-hover: #1a3a5c;
+  --title-color-active: #1e4a6e;
+  --title-color-bg: #2d2d2d;
+
+  // 笔记列表和代码块背景
+  --bg-color: #252526;
+
+  // 全局文字和背景
+  --text-color: #e0e0e0;
+  --text-color-secondary: #a0a0a0;
+  --page-bg: #1E1E1E;
+
+  // 滚动条
+  --scrollbar-color: #a8a8a8 #1E1E1E;
+
+  // 分割线
+  --divider-color: #363636;
+
+  // 复制按钮
+  --copy-button-color: #3a3a3a;
+  --copy-button-border-color: #3a3a3a;
+}
+
+// 全局默认样式（让所有未设置颜色的元素继承）
+body {
+  background-color: var(--page-bg);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+// 暗色模式下 highlight.js 代码高亮颜色覆盖
+[data-theme="dark"] {
+  .hljs {
+    color: #c9d1d9;
+    background: var(--bg-color);
+  }
+  .hljs-comment,
+  .hljs-quote {
+    color: #8b949e;
+  }
+  .hljs-keyword,
+  .hljs-selector-tag {
+    color: #ff7b72;
+  }
+  .hljs-string,
+  .hljs-attr {
+    color: #a5d6ff;
+  }
+  .hljs-number,
+  .hljs-literal {
+    color: #79c0ff;
+  }
+  .hljs-title,
+  .hljs-section,
+  .hljs-selector-id {
+    color: #d2a8ff;
+  }
+  .hljs-function,
+  .hljs-name {
+    color: #d2a8ff;
+  }
+  .hljs-variable,
+  .hljs-template-variable {
+    color: #ffa657;
+  }
+  .hljs-built_in {
+    color: #ffa657;
+  }
 }
