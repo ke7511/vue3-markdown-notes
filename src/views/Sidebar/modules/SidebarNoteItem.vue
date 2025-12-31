@@ -140,7 +140,7 @@ function navigateToNote(noteId: string) {
 
   &:hover {
     background-color: var(--title-color-hover);
-    color: var(--title-color-shadow);
+    color: var(--title-color-text);
 
     :deep(.delete-button) {
       opacity: 1;
@@ -149,10 +149,10 @@ function navigateToNote(noteId: string) {
 
   &.is-active {
     background-color: var(--title-color-active);
-    color: var(--title-color-shadow);
+    color: var(--title-color-text);
     font-weight: 600;
-    border-left-color: var(--title-color-shadow);
-    box-shadow: 0 2px 8px rgba(22, 119, 255, 0.15);
+    border-left-color: var(--title-color-border-left);
+    box-shadow: 0 2px 8px var(--title-color-shadow);
   }
 
   .note-up {

@@ -1,10 +1,12 @@
 // 亮色主题
 :root {
   // 笔记标题颜色
-  --title-color-shadow: #1677ff;
+  --title-color-text: #1677ff;
+  --title-color-shadow: rgba(22, 119, 255, 0.15);
   --title-color-hover: #e8f2ff;
   --title-color-active: #dceeff;
   --title-color-bg: #fdfdfd;
+  --title-color-border-left: #1677ff;
 
   // 笔记列表和代码块背景
   --bg-color: #f5f7f6;
@@ -28,16 +30,18 @@
 // 暗色主题
 [data-theme="dark"] {
   // 笔记标题颜色
-  --title-color-shadow: #409eff;
-  --title-color-hover: #1a3a5c;
-  --title-color-active: #1e4a6e;
-  --title-color-bg: #2d2d2d;
+  --title-color-text: #2998ff;
+  --title-color-shadow: rgba(0, 79, 191, 0.15);
+  --title-color-hover: #1e2122;
+  --title-color-active: #222526;
+  --title-color-bg: #1F2122;
+  --title-color-border-left: #0048ac;
 
   // 笔记列表和代码块背景
   --bg-color: #252526;
 
   // 全局文字和背景
-  --text-color: #e0e0e0;
+  --text-color: #c9c4bd;
   --text-color-secondary: #a0a0a0;
   --page-bg: #1E1E1E;
 
