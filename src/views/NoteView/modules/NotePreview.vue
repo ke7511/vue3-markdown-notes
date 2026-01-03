@@ -10,6 +10,7 @@ const props = defineProps<{ content: string }>()
 
 // 初始化 markdown-it
 const md = new markdownit({
+  html: true, // 允许在 Markdown 中使用 HTML 标签
   highlight: function (str, lang) {
     let codeHtml = ''
     if (lang && hljs.getLanguage(lang)) {
