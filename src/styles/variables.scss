@@ -25,6 +25,10 @@
   // 复制按钮
   --copy-button-color: #fefafa;
   --copy-button-border-color: #eee;
+
+  // 表格
+  --bg-color-secondary: #f9f9f9;
+  --hover-color: #f0f0f0;
 }
 
 // 暗色主题
@@ -54,6 +58,10 @@
   // 复制按钮
   --copy-button-color: #3a3a3a;
   --copy-button-border-color: #3a3a3a;
+
+  // 表格
+  --bg-color-secondary: #2a2a2a;
+  --hover-color: #333333;
 }
 
 // 全局默认样式（让所有未设置颜色的元素继承）

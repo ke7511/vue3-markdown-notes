@@ -86,6 +86,41 @@ defineExpose({
     display: block;
   }
 
+  // 引用样式
+  :deep(blockquote) {
+    padding: 0 16px;
+    border-left: 4px solid var(--text-color-secondary);
+    background-color: var(--bg-color);
+    border-radius: 0 4px 4px 0;
+  }
+
+  // 表格样式
+  :deep(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+
+    th,
+    td {
+      border: 1px solid var(--divider-color);
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--bg-color);
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: var(--bg-color-secondary, rgba(0, 0, 0, 0.02));
+    }
+
+    tr:hover {
+      background-color: var(--hover-color, rgba(0, 0, 0, 0.04));
+    }
+  }
+
   // 代码块
   :deep(.hljs) {
     background-color: var(--bg-color);
@@ -101,8 +136,10 @@ defineExpose({
     background: var(--bg-color);
     border-radius: 4px;
     padding: 5px;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
   }
 
+  // 代码块
   :deep(code) {
     font-family: 'JetBrains Mono', 'Consolas', monospace;
   }
