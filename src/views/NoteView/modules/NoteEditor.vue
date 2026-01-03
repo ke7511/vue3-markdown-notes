@@ -39,9 +39,28 @@ const focusTextarea = async () => {
   }
 }
 
-// 使用 defineExpose 将方法暴露给父组件
+// 定义 emit 事件
+const emit = defineEmits<{
+  editorScroll: [ratio: number]
+}>()
+
+// 编辑区滚动事件处理：计算滚动比例并通知父组件
+const handleScroll = () => {
+  const textarea = textareaRef.value
+  if (!textarea) return
+
+  const scrollTop = textarea.scrollTop
+  const scrollHeight = textarea.scrollHeight - textarea.clientHeight
+
+  // 计算滚动比例
+  const ratio = scrollHeight > 0 ? scrollTop / scrollHeight : 0
+  emit('editorScroll', ratio)
+}
+
+// 使用 defineExpose 将方法和 ref 暴露给父组件
 defineExpose({
-  focusTextarea
+  focusTextarea,
+  textareaRef
 })
 
 // 处理Tab缩进
@@ -145,6 +164,7 @@ const handleTab = (e: KeyboardEvent) => {
       class="editor-textarea"
       placeholder="请输入内容..."
       @keydown.tab="handleTab"
+      @scroll="handleScroll"
     />
   </div>
   <div v-else class="placeholder">

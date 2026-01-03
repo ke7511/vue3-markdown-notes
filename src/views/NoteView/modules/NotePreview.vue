@@ -54,6 +54,11 @@ watch(throttledContent, () => {
     addCopyButton(copyIconSVG, markdownRef.value)
   })
 })
+
+// 暴露 markdownRef 给父组件
+defineExpose({
+  markdownRef
+})
 </script>
 
 <template>

@@ -23,6 +23,8 @@ const { currentNote, noteContent, loadNote } = useNoteLoader()
 
 // 为 NoteEditor 组件创建一个 ref
 const noteEditorRef = ref<InstanceType<typeof NoteEditor> | null>(null)
+// 为 NotePreview 组件创建一个 ref
+const notePreviewRef = ref<InstanceType<typeof NotePreview> | null>(null)
 
 // 创建一个新的函数来组合数据加载和 DOM 操作
 const loadNoteAndFocus = async (noteId: string) => {
@@ -57,6 +59,17 @@ function storePaneSize({ prevPane }: { prevPane: { size: number } }) {
   paneSize.value = prevPane.size
   localStorage.setItem('paneSize', String(prevPane.size))
 }
+
+// ============ 同步滚动功能 ============
+
+// 编辑区滚动时，同步预览区
+const handleEditorScroll = (ratio: number) => {
+  const container = notePreviewRef.value?.markdownRef
+  if (!container) return
+
+  const scrollHeight = container.scrollHeight - container.clientHeight
+  container.scrollTop = ratio * scrollHeight
+}
 </script>
 
 <template>
@@ -80,6 +93,7 @@ function storePaneSize({ prevPane }: { prevPane: { size: number } }) {
           ref="noteEditorRef"
           v-model="noteContent"
           :current-note="currentNote"
+          @editor-scroll="handleEditorScroll"
         />
       </div>
     </pane>
@@ -96,7 +110,7 @@ function storePaneSize({ prevPane }: { prevPane: { size: number } }) {
             />
           </div>
         </div>
-        <NotePreview :content="noteContent" />
+        <NotePreview ref="notePreviewRef" :content="noteContent" />
       </div>
     </pane>
   </Splitpanes>
