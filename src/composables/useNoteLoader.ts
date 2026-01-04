@@ -8,7 +8,7 @@ export const useNoteLoader = () => {
   const noteContent = ref('')
 
   // 封装一个可复用的函数来加载笔记
-  const loadNote = async (noteId: string) => {
+  const loadNote = (noteId: string) => {
     const note = noteStore.getNoteById(noteId)
     if (note) {
       currentNote.value = note

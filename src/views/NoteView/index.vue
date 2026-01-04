@@ -27,7 +27,7 @@ const noteEditorRef = ref<InstanceType<typeof NoteEditor> | null>(null)
 const notePreviewRef = ref<InstanceType<typeof NotePreview> | null>(null)
 
 // 创建一个新的函数来组合数据加载和 DOM 操作
-const loadNoteAndFocus = async (noteId: string) => {
+const loadNoteAndFocus = (noteId: string) => {
   loadNote(noteId)
   noteEditorRef.value?.focusTextarea()
 }
