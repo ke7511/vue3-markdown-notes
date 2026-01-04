@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch, ref, computed } from 'vue'
+import { watch, ref, computed, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { Menu } from '@element-plus/icons-vue'
 import { storeToRefs } from 'pinia'
@@ -27,20 +27,11 @@ const noteEditorRef = ref<InstanceType<typeof NoteEditor> | null>(null)
 const notePreviewRef = ref<InstanceType<typeof NotePreview> | null>(null)
 
 // 创建一个新的函数来组合数据加载和 DOM 操作
-const loadNoteAndFocus = (noteId: string) => {
+const loadNoteAndFocus = async (noteId: string) => {
   loadNote(noteId)
+  await nextTick()
   noteEditorRef.value?.focusTextarea()
 }
-
-// 加载笔记
-onMounted(() => {
-  const id = Array.isArray(route.params.noteId)
-    ? route.params.noteId[0]
-    : route.params.noteId
-  if (id) {
-    loadNoteAndFocus(id)
-  }
-})
 
 // 监听路由变化
 watch(
@@ -50,7 +41,8 @@ watch(
       const id = Array.isArray(newId) ? newId[0] : newId
       loadNoteAndFocus(id)
     }
-  }
+  },
+  { immediate: true }
 )
 
 // 持久化编辑和预览区大小
