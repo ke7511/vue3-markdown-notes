@@ -132,22 +132,18 @@ function navigateToNote(noteId: string) {
   cursor: pointer;
   margin-bottom: 5px;
   border-left: 3px solid transparent;
-  transition:
-    background-color 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.15s ease;
-
+  transition: transform 0.15s ease;
   &:hover {
+    transition: background-color 0.2s ease;
     background-color: var(--title-color-hover);
     color: var(--title-color-text);
-
     :deep(.delete-button) {
       opacity: 1;
     }
   }
 
   &.is-active {
+    transform: scale(1.02);
     background-color: var(--title-color-active);
     color: var(--title-color-text);
     font-weight: 600;
