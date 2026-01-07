@@ -132,7 +132,7 @@ function navigateToNote(noteId: string) {
   cursor: pointer;
   margin-bottom: 5px;
   border-left: 3px solid transparent;
-  transition: transform 0.15s ease;
+
   &:hover {
     transition: background-color 0.2s ease;
     background-color: var(--title-color-hover);
