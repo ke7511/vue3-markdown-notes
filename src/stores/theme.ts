@@ -20,17 +20,11 @@ export const useThemeStore = defineStore(
       return themeMode.value
     })
 
+    // 是否为首次加载（用于跳过初始化时的动画）
+    let isInitialLoad = true
     // 应用主题到 DOM
     function applyTheme() {
       const html = document.documentElement
-      html.setAttribute('data-theme', currentTheme.value)
-      // Element Plus 暗色主题需要 dark 类名
-      if (currentTheme.value === 'dark') {
-        html.classList.add('dark')
-      } else {
-        html.classList.remove('dark')
-      }
-
       // 动态切换 highlight.js 主题
       const hljsLinkId = 'hljs-theme'
       let link = document.getElementById(hljsLinkId) as HTMLLinkElement | null
@@ -40,9 +34,30 @@ export const useThemeStore = defineStore(
         link.rel = 'stylesheet'
         document.head.appendChild(link)
       }
-      // 根据主题切换不同的 CSS 文件
       const themeName = currentTheme.value === 'dark' ? 'github-dark' : 'github'
       link.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${themeName}.min.css`
+
+      // Element Plus 暗色主题需要 dark 类名
+      if (currentTheme.value === 'dark') {
+        html.classList.add('dark')
+      } else {
+        html.classList.remove('dark')
+      }
+
+      // 首次加载时直接应用主题，不显示动画
+      if (isInitialLoad) {
+        html.setAttribute('data-theme', currentTheme.value)
+        isInitialLoad = false
+        return
+      }
+      // 遮罩动画（仅在用户切换主题时触发）
+      html.classList.add('theme-fade')
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          html.setAttribute('data-theme', currentTheme.value)
+          html.classList.remove('theme-fade')
+        }, 120)
+      })
     }
 
     // 切换主题
@@ -51,7 +66,7 @@ export const useThemeStore = defineStore(
     }
 
     // 监听主题模式变化
-    watch(themeMode, applyTheme, { immediate: true })
+    watch(themeMode, applyTheme)
 
     // 监听系统主题变化
     window

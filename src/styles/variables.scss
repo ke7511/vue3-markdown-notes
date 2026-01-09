@@ -69,3 +69,18 @@ body {
   background-color: var(--page-bg);
   color: var(--text-color);
 }
+
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: var(--page-bg);
+  transition: opacity 200ms ease;
+  z-index: 999999;
+}
+
+html.theme-fade::before {
+  opacity: 1;
+}
