@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
 import { db } from '@/utils/db'
 import { getUniqueTitle } from '@/utils/uniqueTitle'
+import { useSidebarStore } from './sidebar'
 
 // 定义 Note 接口，明确一篇笔记包含哪些数据
 export interface NoteType {
@@ -51,6 +52,7 @@ export const useNoteStore = defineStore('note', () => {
 
   // 新增笔记
   const router = useRouter()
+  const sidebarStore = useSidebarStore()
   async function createNote() {
     const newNote: NoteType = {
       id: `note-${Date.now()}`,
@@ -61,6 +63,10 @@ export const useNoteStore = defineStore('note', () => {
     noteList.value.unshift(newNote)
     await db.notes.add(newNote)
     router.push(`/${newNote.id}`)
+    // 移动模式新建笔记后关闭抽屉
+    if (sidebarStore.isMobile) {
+      sidebarStore.closeSidebar()
+    }
   }
 
   // 更新笔记内容
