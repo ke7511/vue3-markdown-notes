@@ -43,11 +43,12 @@ export const useThemeStore = defineStore(
       } else {
         html.classList.remove('dark')
       }
-
-      // 首次加载时直接应用主题，不显示动画
+      // 刷新时直接应用主题，不显示动画
       if (isInitialLoad) {
         html.setAttribute('data-theme', currentTheme.value)
-        isInitialLoad = false
+        setTimeout(() => {
+          isInitialLoad = false
+        }, 0)
         return
       }
       // 遮罩动画（仅在用户切换主题时触发）
@@ -66,7 +67,7 @@ export const useThemeStore = defineStore(
     }
 
     // 监听主题模式变化
-    watch(themeMode, applyTheme)
+    watch(themeMode, applyTheme, { immediate: true })
 
     // 监听系统主题变化
     window
