@@ -1,67 +1,101 @@
 // 亮色主题
-:root {
+html:root {
   // 笔记标题颜色
-  --title-color-text: #1677ff;
-  --title-color-shadow: rgba(22, 119, 255, 0.15);
-  --title-color-hover: #e8f2ff;
-  --title-color-active: #dceeff;
+  --title-color-text: #6b9cdb;
+  --title-color-shadow: rgba(107, 156, 219, 0.15);
+  --title-color-hover: #f0f5fb;
+  --title-color-active: #e5f0f8;
   --title-color-bg: #fdfdfd;
-  --title-color-border-left: #1677ff;
+  --title-color-border-left: #6b9cdb;
 
   // 笔记列表和代码块背景
   --bg-color: #f5f7f6;
 
   // 全局文字和背景
-  --text-color: #303133;
-  --text-color-secondary: #909399;
+  --text-color: #1f2937;
+  --text-color-secondary: #6b7280;
   --page-bg: #ffffff;
 
   // 滚动条
-  --scrollbar-color: #a8a8a8 #fff;
+  --scrollbar-color: #c9c9c9 #ffffff;
 
   // 分割线
-  --divider-color: #e7e7e7;
+  --divider-color: #e5e7eb;
 
   // 复制按钮
-  --copy-button-color: #fefafa;
-  --copy-button-border-color: #eee;
+  --copy-button-color: #f9fafb;
+  --copy-button-border-color: #e5e7eb;
 
   // 表格
-  --bg-color-secondary: #f9f9f9;
-  --hover-color: #f0f0f0;
+  --bg-color-secondary: #f9fafb;
+  --hover-color: #f3f4f6;
+
+  // Element Plus 主题色覆盖
+  --el-color-primary: #6b9cdb;
+  --el-color-primary-light-3: #9dbde8;
+  --el-color-primary-light-5: #b5cdef;
+  --el-color-primary-light-7: #cdddf5;
+  --el-color-primary-light-8: #dce8f8;
+  --el-color-primary-light-9: #ebf2fb;
+  --el-color-primary-dark-2: #567db0;
+  --el-color-success: #7ab87a;
+  --el-color-success-light-3: #a3cfa3;
+  --el-color-success-light-5: #bcdcbc;
+  --el-color-success-light-9: #f0f7f0;
+  --el-color-warning: #d4a656;
+  --el-color-warning-light-3: #e2c48a;
+  --el-color-warning-light-5: #ead5a8;
+  --el-color-warning-light-9: #faf5eb;
 }
 
 // 暗色主题
-[data-theme='dark'] {
+html[data-theme='dark'] {
   // 笔记标题颜色
-  --title-color-text: #2998ff;
-  --title-color-shadow: rgba(0, 79, 191, 0.15);
+  --title-color-text: #7aaae5;
+  --title-color-shadow: rgba(122, 170, 229, 0.15);
   --title-color-hover: #1e2122;
   --title-color-active: #222526;
   --title-color-bg: #1f2122;
-  --title-color-border-left: #0048ac;
+  --title-color-border-left: #7aaae5;
 
   // 笔记列表和代码块背景
-  --bg-color: #252526;
+  --bg-color: #262626;
 
   // 全局文字和背景
-  --text-color: #e3e3e3;
-  --text-color-secondary: #a0a0a0;
-  --page-bg: #1e1e1e;
+  --text-color: #d1d5db;
+  --text-color-secondary: #9ca3af;
+  --page-bg: #1a1a1a;
 
   // 滚动条
-  --scrollbar-color: #a8a8a8 #1e1e1e;
+  --scrollbar-color: #525252 #1a1a1a;
 
   // 分割线
-  --divider-color: #363636;
+  --divider-color: #404040;
 
   // 复制按钮
-  --copy-button-color: #3a3a3a;
-  --copy-button-border-color: #3a3a3a;
+  --copy-button-color: #2e2e2e;
+  --copy-button-border-color: #404040;
 
   // 表格
-  --bg-color-secondary: #2a2a2a;
+  --bg-color-secondary: #262626;
   --hover-color: #333333;
+
+  // Element Plus 主题色覆盖（与笔记列表配色统一）
+  --el-color-primary: #7aaae5;
+  --el-color-primary-light-3: #456580;
+  --el-color-primary-light-5: #384f66;
+  --el-color-primary-light-7: #2d3f52;
+  --el-color-primary-light-8: #263545;
+  --el-color-primary-light-9: #1f2b38;
+  --el-color-primary-dark-2: #a8c9ed;
+  --el-color-success: #7ab87a;
+  --el-color-success-light-3: #3d5c3d;
+  --el-color-success-light-5: #2f472f;
+  --el-color-success-light-9: #1f2d1f;
+  --el-color-warning: #d4a656;
+  --el-color-warning-light-3: #6b5330;
+  --el-color-warning-light-5: #4f3e24;
+  --el-color-warning-light-9: #2e2518;
 }
 
 // 全局默认样式（让所有未设置颜色的元素继承）
