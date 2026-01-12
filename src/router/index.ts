@@ -9,7 +9,7 @@ const router = createRouter({
       redirect: '/note-welcome',
       children: [
         {
-          path: '/:noteId',
+          path: ':noteId', // 使用相对路径（去掉前面的斜杠）
           component: () => import('@/views/NoteView/index.vue')
         }
       ]
