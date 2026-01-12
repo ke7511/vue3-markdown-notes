@@ -9,6 +9,7 @@ import ElementPlus from 'unplugin-element-plus/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/vue3-markdown-notes/',
   plugins: [
     vue(),
     vueDevTools(),
