@@ -1,16 +1,18 @@
 import { createRouter, createWebHashHistory, START_LOCATION } from 'vue-router'
+import Layout from '@/views/Layout/index.vue'
+import NoteView from '@/views/NoteView/index.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      component: () => import('@/views/Layout/index.vue'),
+      component: Layout,
       redirect: '/note-welcome',
       children: [
         {
-          path: ':noteId', // 使用相对路径（去掉前面的斜杠）
-          component: () => import('@/views/NoteView/index.vue')
+          path: ':noteId',
+          component: NoteView
         }
       ]
     }
