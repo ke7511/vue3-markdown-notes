@@ -19,13 +19,14 @@ export default defineConfig({
     Components({
       resolvers: [ElementPlusResolver({ importStyle: 'css' })]
     }),
-    ElementPlus({
-      // options
-    })
+    ElementPlus({})
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server: {
+    open: true
   }
 })
