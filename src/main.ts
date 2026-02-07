@@ -6,6 +6,7 @@ import router from './router'
 import 'normalize.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import '@/styles/variables.scss'
+import 'splitpanes/dist/splitpanes.css'
 import { useNoteStore } from '@/stores/note'
 
 const app = createApp(App)

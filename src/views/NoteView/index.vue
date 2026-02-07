@@ -10,7 +10,6 @@ import MarkdownExport from './modules/MarkdownExport.vue'
 import { useNoteLoader } from '@/composables/useNoteLoader'
 import { useSidebarStore } from '@/stores/sidebar'
 import { Splitpanes, Pane } from 'splitpanes'
-import 'splitpanes/dist/splitpanes.css'
 
 const sidebarStore = useSidebarStore()
 const { isMobile, isMobileOpen } = storeToRefs(sidebarStore)
