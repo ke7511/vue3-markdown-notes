@@ -28,5 +28,17 @@ export default defineConfig({
   },
   server: {
     open: true
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id: string) => {
+          if (id.includes('node_modules')) {
+            return 'vendor'
+          }
+          return null
+        }
+      }
+    }
   }
 })
