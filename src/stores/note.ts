@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { db } from '@/utils/db'
 import { getUniqueTitle } from '@/utils/uniqueTitle'
 import { useSidebarStore } from './sidebar'
+import { ElMessageBox } from 'element-plus'
 
 // 定义 Note 接口，明确一篇笔记包含哪些数据
 export interface NoteType {
@@ -15,6 +16,40 @@ export interface NoteType {
 
 export const useNoteStore = defineStore('note', () => {
   const noteList = ref<NoteType[]>([])
+  const isUnsaved = ref(false)
+
+  // 通用数据库读写与错误处理封装
+  async function withDBErrorHandler<T>(
+    operation: () => Promise<T>,
+    actionName: string
+  ): Promise<T | void> {
+    try {
+      const result = await operation()
+      isUnsaved.value = false
+      return result
+    } catch (e: unknown) {
+      console.error(`Failed to ${actionName}:`, e)
+      isUnsaved.value = true
+      return new Promise<T | void>((resolve) => {
+        ElMessageBox.confirm(
+          `本地存储空间不足或出现异常，${actionName}操作失败，是否重试？`,
+          '提示',
+          {
+            confirmButtonText: '重试',
+            cancelButtonText: '取消',
+            type: 'error'
+          }
+        )
+          .then(async () => {
+            const retryResult = await withDBErrorHandler(operation, actionName)
+            resolve(retryResult)
+          })
+          .catch(() => {
+            resolve()
+          })
+      })
+    }
+  }
 
   // 新增一个 action，用于从数据库加载所有笔记
   async function loadFromDB() {
@@ -32,7 +67,7 @@ export const useNoteStore = defineStore('note', () => {
   // 删除笔记
   async function deleteNote(id: string) {
     noteList.value = noteList.value.filter((note) => note.id !== id)
-    await db.notes.delete(id)
+    await withDBErrorHandler(() => db.notes.delete(id), '删除笔记')
   }
 
   /**
@@ -45,7 +80,10 @@ export const useNoteStore = defineStore('note', () => {
     if (note) {
       note.title = getUniqueTitle(newTitle, noteList.value, id)
       if (note.title !== newTitle) {
-        await db.notes.update(id, { title: note.title })
+        await withDBErrorHandler(
+          () => db.notes.update(id, { title: note.title }),
+          '修改标题'
+        )
       }
     }
   }
@@ -61,7 +99,7 @@ export const useNoteStore = defineStore('note', () => {
       createdTime: Date.now()
     }
     noteList.value.unshift(newNote)
-    await db.notes.add(newNote)
+    await withDBErrorHandler(() => db.notes.add(newNote), '创建笔记')
     router.push(`/${newNote.id}`)
     // 移动模式新建笔记后关闭抽屉
     if (sidebarStore.isMobile) {
@@ -74,7 +112,10 @@ export const useNoteStore = defineStore('note', () => {
     const note = noteList.value.find((note) => note.id === noteId)
     if (note) {
       note.content = newContent
-      await db.notes.update(noteId, { content: newContent })
+      await withDBErrorHandler(
+        () => db.notes.update(noteId, { content: newContent }),
+        '保存内容'
+      )
     }
   }
   return {
