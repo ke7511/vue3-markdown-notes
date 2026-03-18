@@ -29,7 +29,7 @@ export const addCopyButton = (
       if (timerId) {
         clearTimeout(timerId)
       } else if (!copyButton.classList.contains('copied')) {
-        const codeContent = code.querySelector('code')?.innerText
+        const codeContent = code.querySelector('code')?.textContent
         if (codeContent) {
           // 使用浏览器的剪贴板 API
           navigator.clipboard.writeText(codeContent).then(() => {
