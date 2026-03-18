@@ -39,7 +39,9 @@ watch(
 )
 // 创建一个计算属性，依赖 throttledContent，用于实时渲染预览区的 HTML，并防范XSS
 const renderedMarkdown = computed(() =>
-  DOMPurify.sanitize(md.render(throttledContent.value))
+  DOMPurify.sanitize(md.render(throttledContent.value), {
+    USE_PROFILES: { html: true }
+  })
 )
 
 // 增加复制按钮
