@@ -49,7 +49,7 @@ html:root {
 }
 
 // 暗色主题
-html[data-theme='dark'] {
+html.dark {
   // 笔记标题颜色
   --title-color-text: #7aaae5;
   --title-color-shadow: rgba(122, 170, 229, 0.15);

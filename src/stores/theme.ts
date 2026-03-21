@@ -37,15 +37,9 @@ export const useThemeStore = defineStore(
       const themeName = currentTheme.value === 'dark' ? 'github-dark' : 'github'
       link.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${themeName}.min.css`
 
-      // Element Plus 暗色主题需要 dark 类名
-      if (currentTheme.value === 'dark') {
-        html.classList.add('dark')
-      } else {
-        html.classList.remove('dark')
-      }
       // 刷新时直接应用主题，不显示动画
       if (isInitialLoad) {
-        html.setAttribute('data-theme', currentTheme.value)
+        html.classList.toggle('dark', currentTheme.value === 'dark')
         setTimeout(() => {
           isInitialLoad = false
         }, 0)
@@ -55,7 +49,7 @@ export const useThemeStore = defineStore(
       html.classList.add('theme-fade')
       requestAnimationFrame(() => {
         setTimeout(() => {
-          html.setAttribute('data-theme', currentTheme.value)
+          html.classList.toggle('dark', currentTheme.value === 'dark')
           html.classList.remove('theme-fade')
         }, 120)
       })
