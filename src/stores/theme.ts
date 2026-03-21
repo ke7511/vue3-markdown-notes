@@ -61,7 +61,7 @@ export const useThemeStore = defineStore(
     }
 
     // 监听主题模式变化
-    watch(themeMode, applyTheme, { immediate: true })
+    watch(currentTheme, applyTheme, { immediate: true })
 
     // 监听系统主题变化
     window
