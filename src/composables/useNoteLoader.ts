@@ -9,6 +9,15 @@ export const useNoteLoader = () => {
 
   // 封装一个可复用的函数来加载笔记
   const loadNote = (noteId: string) => {
+    window.addEventListener('beforeunload', () => {
+      if (currentNote.value) {
+        noteStore.updateNoteContent(currentNote.value.id, noteContent.value)
+      }
+    })
+
+    if (currentNote.value) {
+      noteStore.updateNoteContent(currentNote.value.id, noteContent.value)
+    }
     const note = noteStore.getNoteById(noteId)
     if (note) {
       currentNote.value = note

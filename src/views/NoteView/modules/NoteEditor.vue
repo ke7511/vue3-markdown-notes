@@ -24,13 +24,6 @@ watch(noteContent, (newContent) => {
   saveNoteContent(newContent)
 })
 
-// 组件卸载时保存内容
-onUnmounted(() => {
-  if (props.currentNote) {
-    noteStore.updateNoteContent(props.currentNote.id, noteContent.value)
-  }
-})
-
 // 创建一个方法，用于聚焦 textarea
 const focusTextarea = async () => {
   if (textareaRef.value && noteContent.value === '') {
