@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref, onUnmounted } from 'vue'
+import { watch, ref } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import type { NoteType } from '@/stores/note'
 import { useNoteStore } from '@/stores/note'
