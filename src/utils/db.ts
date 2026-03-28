@@ -4,10 +4,7 @@ import type { NoteType } from '@/stores/note'
 
 // 定义数据库实例，并通过交叉类型声明表结构
 const db = new Dexie('InkFlowDB') as Dexie & {
-  notes: EntityTable<
-    NoteType,
-    'id' // 主键字段，用于类型提示
-  >
+  notes: EntityTable<NoteType, 'id'>
 }
 
 // 定义数据库版本和 stores
