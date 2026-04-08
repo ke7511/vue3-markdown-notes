@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "vue"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-console": "warn",
+    "eqeqeq": "error",
+    "no-unused-vars": "error"
+  },
+  "env": {
+    "builtin": true
+  }
+}
