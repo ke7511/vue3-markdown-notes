@@ -28,6 +28,7 @@ export const useNoteStore = defineStore('note', () => {
       isUnsaved.value = false
       return result
     } catch (e: unknown) {
+      // oxlint-disable-next-line no-console
       console.error(`Failed to ${actionName}:`, e)
       isUnsaved.value = true
       return new Promise<T | void>((resolve) => {
